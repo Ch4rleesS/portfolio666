@@ -1,0 +1,1060 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Portfolio - Windows XP</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <style>
+      :root {
+        --win-bg: #008080;
+        --win-window: #ece9d8;
+        --win-title-start: #0a246a;
+        --win-title-end: #a6caf0;
+        --win-title-text: #ffffff;
+        --win-border-light: #ffffff;
+        --win-border-dark: #808080;
+        --win-border-darker: #404040;
+        --win-button: #ece9d8;
+        --win-taskbar-start: #1f91e5;
+        --win-taskbar-end: #0055a4;
+        --win-text: #000000;
+        --win-text-muted: #404040;
+        --win-blue: #000080;
+        --win-highlight: #316ac5;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family: Tahoma, Verdana, Arial, sans-serif;
+        background: var(--win-bg);
+        color: var(--win-text);
+        line-height: 1.5;
+        min-height: 100vh;
+        padding-bottom: 60px;
+      }
+      @media print {
+        body,
+        html {
+          display: none !important;
+        }
+      }
+
+      .taskbar {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 42px;
+        background: linear-gradient(
+          180deg,
+          var(--win-taskbar-start) 0%,
+          var(--win-taskbar-end) 100%
+        );
+        border-top: 2px solid #4c8bc0;
+        display: flex;
+        align-items: center;
+        padding: 0 4px;
+        z-index: 10000;
+        box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.3);
+      }
+      .start-btn {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        background: linear-gradient(180deg, #3da35d 0%, #1e7a3a 100%);
+        border: 2px outset #3da35d;
+        border-radius: 4px;
+        color: white;
+        font-weight: bold;
+        font-size: 13px;
+        padding: 4px 12px;
+        cursor: pointer;
+        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3);
+        height: 34px;
+        margin-right: 8px;
+        text-decoration: none;
+      }
+      .start-btn:hover {
+        background: linear-gradient(180deg, #4cb86d 0%, #2e8a4a 100%);
+      }
+      .taskbar-items {
+        display: flex;
+        gap: 4px;
+        flex: 1;
+        align-items: center;
+        justify-content: center;
+      }
+      .task-item {
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.15) 0%,
+          rgba(0, 0, 0, 0.1) 100%
+        );
+        border: 2px outset rgba(255, 255, 255, 0.2);
+        border-radius: 3px;
+        color: white;
+        font-size: 12px;
+        padding: 5px 16px;
+        cursor: pointer;
+        text-decoration: none;
+        transition: all 0.1s;
+        height: 32px;
+        display: flex;
+        align-items: center;
+      }
+      .task-item:hover {
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.25) 0%,
+          rgba(0, 0, 0, 0.05) 100%
+        );
+      }
+      .task-item.active {
+        background: linear-gradient(
+          180deg,
+          rgba(0, 0, 0, 0.2) 0%,
+          rgba(255, 255, 255, 0.1) 100%
+        );
+        border-style: inset;
+        box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.3);
+      }
+      .taskbar-clock {
+        color: white;
+        font-size: 12px;
+        padding: 4px 12px;
+        border: 2px inset rgba(0, 0, 0, 0.2);
+        border-radius: 3px;
+        background: rgba(0, 0, 0, 0.1);
+        min-width: 70px;
+        text-align: center;
+      }
+
+      .desktop-icons {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        z-index: 100;
+      }
+      .desktop-icon {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        cursor: pointer;
+        width: 80px;
+        text-align: center;
+        color: white;
+        font-size: 12px;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+        text-decoration: none;
+      }
+      .desktop-icon:hover {
+        color: #a6caf0;
+      }
+      .d-icon-box {
+        width: 48px;
+        height: 48px;
+        background: linear-gradient(135deg, #ffd700, #ffa500);
+        border: 2px outset #ffd700;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+      }
+
+      .win-window {
+        background: var(--win-window);
+        border: 2px solid var(--win-border-darker);
+        border-right-color: var(--win-border-light);
+        border-bottom-color: var(--win-border-light);
+        box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.4);
+        margin-bottom: 24px;
+        position: relative;
+      }
+      .win-window::before {
+        content: "";
+        position: absolute;
+        inset: -2px;
+        border: 2px solid var(--win-border-dark);
+        border-right-color: var(--win-border-light);
+        border-bottom-color: var(--win-border-light);
+        pointer-events: none;
+        z-index: -1;
+      }
+      .win-titlebar {
+        background: linear-gradient(
+          180deg,
+          var(--win-title-end) 0%,
+          var(--win-title-start) 100%
+        );
+        padding: 6px 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 2px solid var(--win-border-darker);
+      }
+      .win-titlebar.inactive {
+        background: linear-gradient(180deg, #d6dff7 0%, #7a96df 100%);
+      }
+      .win-title {
+        color: var(--win-title-text);
+        font-weight: bold;
+        font-size: 13px;
+        letter-spacing: 0.3px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.2);
+      }
+      .win-title-icon {
+        width: 16px;
+        height: 16px;
+        background: linear-gradient(135deg, #ffd700, #ff8c00);
+        border: 1px solid #cc7000;
+        border-radius: 2px;
+      }
+      .win-buttons {
+        display: flex;
+        gap: 4px;
+      }
+      .win-btn {
+        width: 22px;
+        height: 20px;
+        background: var(--win-button);
+        border: 2px outset var(--win-button);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        font-weight: bold;
+        cursor: pointer;
+        color: #000;
+        line-height: 1;
+        padding-bottom: 2px;
+      }
+      .win-btn:hover {
+        background: #d4d0c8;
+      }
+      .win-btn:active {
+        border-style: inset;
+      }
+      .win-btn.close {
+        background: linear-gradient(180deg, #ff6b6b 0%, #cc0000 100%);
+        color: white;
+        border-color: #cc0000;
+      }
+      .win-btn.close:hover {
+        background: linear-gradient(180deg, #ff8585 0%, #dd0000 100%);
+      }
+      .win-content {
+        padding: 16px;
+        background: var(--win-window);
+      }
+
+      .desktop-area {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 20px 20px 80px;
+      }
+
+      .win-button {
+        background: var(--win-button);
+        border: 2px outset var(--win-button);
+        padding: 6px 20px;
+        font-family: Tahoma, Verdana, Arial, sans-serif;
+        font-size: 13px;
+        cursor: pointer;
+        color: var(--win-text);
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .win-button:hover {
+        background: #d4d0c8;
+      }
+      .win-button:active {
+        border-style: inset;
+        padding: 7px 19px 5px 21px;
+      }
+      .win-button.primary {
+        background: linear-gradient(180deg, #e8f0fe 0%, #b8d4f0 100%);
+        border-color: #7a96df;
+        font-weight: bold;
+      }
+
+      .filter-bar {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 16px;
+        padding: 8px;
+        background: #f5f3ee;
+        border: 2px inset var(--win-window);
+      }
+      .filter-btn {
+        background: var(--win-button);
+        border: 2px outset var(--win-button);
+        padding: 4px 14px;
+        font-family: Tahoma, Verdana, Arial, sans-serif;
+        font-size: 12px;
+        cursor: pointer;
+      }
+      .filter-btn:hover {
+        background: #d4d0c8;
+      }
+      .filter-btn:active {
+        border-style: inset;
+      }
+      .filter-btn.active {
+        background: linear-gradient(
+          180deg,
+          var(--win-title-end) 0%,
+          var(--win-title-start) 100%
+        );
+        color: white;
+        border: 2px solid var(--win-title-start);
+      }
+
+      .project-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 16px;
+      }
+      .project-card {
+        background: var(--win-window);
+        border: 2px solid var(--win-border-darker);
+        border-right-color: var(--win-border-light);
+        border-bottom-color: var(--win-border-light);
+        cursor: pointer;
+        transition: transform 0.1s;
+        overflow: hidden;
+      }
+      .project-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2);
+      }
+      .project-thumb {
+        height: 160px;
+        background: linear-gradient(135deg, #e8e6e1, #d4d0c8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 48px;
+        border-bottom: 2px solid var(--win-border-dark);
+        overflow: hidden;
+      }
+      .project-thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      .project-info {
+        padding: 12px;
+      }
+      .project-title {
+        font-weight: bold;
+        font-size: 13px;
+        margin-bottom: 4px;
+        color: var(--win-blue);
+      }
+      .project-cat {
+        font-size: 11px;
+        color: var(--win-text-muted);
+        background: #e8e6e1;
+        padding: 2px 8px;
+        display: inline-block;
+        margin-bottom: 6px;
+        border: 1px solid var(--win-border-dark);
+      }
+      .project-desc {
+        font-size: 12px;
+        color: var(--win-text-muted);
+        line-height: 1.4;
+      }
+
+      .modal-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.6);
+        z-index: 20000;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      }
+      .modal-overlay.active {
+        display: flex;
+      }
+      .modal-window {
+        background: var(--win-window);
+        border: 2px solid var(--win-border-darker);
+        border-right-color: var(--win-border-light);
+        border-bottom-color: var(--win-border-light);
+        box-shadow: 8px 8px 24px rgba(0, 0, 0, 0.5);
+        width: 100%;
+        max-width: 900px;
+        max-height: 90vh;
+        display: flex;
+        flex-direction: column;
+      }
+      .modal-body {
+        padding: 16px;
+        overflow: auto;
+        flex: 1;
+      }
+      .pdf-viewer {
+        background: #ffffff;
+        border: 2px inset var(--win-window);
+        min-height: 400px;
+      }
+      .pdf-viewer canvas {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+
+      .section-title {
+        font-weight: bold;
+        color: var(--win-blue);
+        font-size: 14px;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 12px;
+      }
+      .info-card {
+        background: var(--win-window);
+        border: 2px solid var(--win-border-darker);
+        border-right-color: var(--win-border-light);
+        border-bottom-color: var(--win-border-light);
+        overflow: hidden;
+      }
+      .info-card-header {
+        background: linear-gradient(180deg, #d6dff7 0%, #7a96df 100%);
+        padding: 6px 10px;
+        color: white;
+        font-weight: bold;
+        font-size: 12px;
+        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.2);
+      }
+      .info-card-body {
+        padding: 12px;
+        font-size: 12px;
+      }
+
+      .skills-category {
+        margin-bottom: 16px;
+      }
+      .skills-category-header {
+        background: linear-gradient(
+          180deg,
+          var(--win-title-end) 0%,
+          var(--win-title-start) 100%
+        );
+        color: white;
+        padding: 8px 12px;
+        font-weight: bold;
+        font-size: 13px;
+        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.2);
+        border: 2px solid var(--win-border-darker);
+        border-bottom: none;
+      }
+      .skills-category-body {
+        background: var(--win-window);
+        border: 2px solid var(--win-border-darker);
+        border-right-color: var(--win-border-light);
+        border-bottom-color: var(--win-border-light);
+        padding: 12px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .skill-chip {
+        background: linear-gradient(180deg, #e8f0fe 0%, #b8d4f0 100%);
+        border: 2px outset #b8d4f0;
+        padding: 4px 12px;
+        font-size: 12px;
+        font-family: Tahoma, Verdana, Arial, sans-serif;
+      }
+
+      ::-webkit-scrollbar {
+        width: 16px;
+        height: 16px;
+      }
+      ::-webkit-scrollbar-track {
+        background: var(--win-window);
+        border: 2px inset var(--win-window);
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--win-button);
+        border: 2px outset var(--win-button);
+      }
+
+      @media (max-width: 768px) {
+        .desktop-icons {
+          display: none;
+        }
+        .taskbar-items {
+          gap: 2px;
+        }
+        .task-item {
+          padding: 4px 8px;
+          font-size: 11px;
+        }
+        .desktop-area {
+          padding: 10px 10px 80px;
+        }
+        .win-content {
+          padding: 12px;
+        }
+      }
+
+      .loading {
+        text-align: center;
+        padding: 40px;
+        color: var(--win-text-muted);
+      }
+      .error-box {
+        background: #ffe4e4;
+        border: 2px inset #cc0000;
+        color: #cc0000;
+        padding: 16px;
+        text-align: center;
+        font-size: 13px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="desktop-icons">
+      <a href="#beranda" class="desktop-icon"
+        ><div class="d-icon-box">🏠</div>
+        <span>Beranda</span></a
+      >
+      <a href="#tentang" class="desktop-icon"
+        ><div
+          class="d-icon-box"
+          style="
+            background: linear-gradient(135deg, #87ceeb, #4682b4);
+            border-color: #4682b4;
+          "
+        >
+          👤
+        </div>
+        <span>Tentang</span></a
+      >
+      <a href="#pendidikan" class="desktop-icon"
+        ><div
+          class="d-icon-box"
+          style="
+            background: linear-gradient(135deg, #dda0dd, #8b008b);
+            border-color: #8b008b;
+          "
+        >
+          🎓
+        </div>
+        <span>Pendidikan</span></a
+      >
+      <a href="#pengalaman" class="desktop-icon"
+        ><div
+          class="d-icon-box"
+          style="
+            background: linear-gradient(135deg, #90ee90, #228b22);
+            border-color: #228b22;
+          "
+        >
+          💼
+        </div>
+        <span>Pengalaman</span></a
+      >
+      <a href="#keahlian" class="desktop-icon"
+        ><div
+          class="d-icon-box"
+          style="
+            background: linear-gradient(135deg, #ffb6c1, #dc143c);
+            border-color: #dc143c;
+          "
+        >
+          ⚡
+        </div>
+        <span>Keahlian</span></a
+      >
+      <a href="#proyek" class="desktop-icon"
+        ><div
+          class="d-icon-box"
+          style="
+            background: linear-gradient(135deg, #ffd700, #ff8c00);
+            border-color: #ff8c00;
+          "
+        >
+          📁
+        </div>
+        <span>Proyek</span></a
+      >
+      <a href="#sertifikat" class="desktop-icon"
+        ><div
+          class="d-icon-box"
+          style="
+            background: linear-gradient(135deg, #98fb98, #006400);
+            border-color: #006400;
+          "
+        >
+          🏆
+        </div>
+        <span>Sertifikat</span></a
+      >
+      <a href="#kontak" class="desktop-icon"
+        ><div
+          class="d-icon-box"
+          style="
+            background: linear-gradient(135deg, #f0e68c, #b8860b);
+            border-color: #b8860b;
+          "
+        >
+          📧
+        </div>
+        <span>Kontak</span></a
+      >
+    </div>
+
+    <div class="taskbar">
+      <a href="admin.html" class="start-btn">
+        <div
+          style="
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(
+              135deg,
+              #ff6b6b 25%,
+              #4ecdc4 25%,
+              #4ecdc4 50%,
+              #45b7d1 50%,
+              #45b7d1 75%,
+              #96ceb4 75%
+            );
+            border-radius: 3px;
+          "
+        ></div>
+        <span>start</span>
+      </a>
+      <div class="taskbar-items">
+        <a href="#beranda" class="task-item" onclick="setActive(this)"
+          >Beranda</a
+        >
+        <a href="#tentang" class="task-item" onclick="setActive(this)"
+          >Tentang</a
+        >
+        <a href="#pendidikan" class="task-item" onclick="setActive(this)"
+          >Pendidikan</a
+        >
+        <a href="#pengalaman" class="task-item" onclick="setActive(this)"
+          >Pengalaman</a
+        >
+        <a href="#keahlian" class="task-item" onclick="setActive(this)"
+          >Keahlian</a
+        >
+        <a href="#proyek" class="task-item" onclick="setActive(this)">Proyek</a>
+        <a href="#sertifikat" class="task-item" onclick="setActive(this)"
+          >Sertifikat</a
+        >
+        <a href="#kontak" class="task-item" onclick="setActive(this)">Kontak</a>
+      </div>
+      <div class="taskbar-clock" id="clock">--:--</div>
+    </div>
+
+    <div class="desktop-area" id="mainContainer">
+      <div class="loading" id="loading">⏳ Memuat data portfolio...</div>
+    </div>
+
+    <div class="modal-overlay" id="pdfModal">
+      <div class="modal-window">
+        <div class="win-titlebar">
+          <div class="win-title">
+            <div class="win-title-icon"></div>
+            <span id="modalTitle">PDF Viewer</span>
+          </div>
+          <div class="win-buttons">
+            <div class="win-btn" onclick="closeModal()">_</div>
+            <div class="win-btn close" onclick="closeModal()">×</div>
+          </div>
+        </div>
+        <div class="modal-body">
+          <div class="pdf-viewer" id="pdfViewer"></div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      pdfjsLib.GlobalWorkerOptions.workerSrc =
+        "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+
+      let portfolioData = null;
+      let currentFilter = "All";
+
+      async function loadData() {
+        try {
+          // Cache-buster agar selalu ambil file terbaru
+          const response = await fetch("data.json?_=" + Date.now());
+          if (!response.ok) throw new Error("Gagal memuat data.json");
+          portfolioData = await response.json();
+          renderAll();
+        } catch (err) {
+          console.log("Fetch data.json gagal:", err);
+          const saved = localStorage.getItem("portfolioData");
+          if (saved) {
+            portfolioData = JSON.parse(saved);
+            renderAll();
+          } else {
+            document.getElementById("loading").innerHTML = `
+                        <div style="text-align:center;padding:40px;">
+                            <div style="font-size:48px;margin-bottom:16px;">📂</div>
+                            <h3 style="color:var(--win-blue);margin-bottom:12px;">data.json tidak ditemukan</h3>
+                            <p style="color:var(--win-text-muted);font-size:13px;margin-bottom:16px;">
+                                Halaman ini perlu dijalankan melalui web server.<br>
+                                Atau, buka <b>admin.html</b> terlebih dahulu untuk mengisi data.
+                            </p>
+                            <button class="win-button primary" onclick="window.open('admin.html','_blank')">
+                                🛠️ Buka Admin Panel
+                            </button>
+                        </div>
+                    `;
+          }
+        }
+      }
+
+      function renderAll() {
+        const container = document.getElementById("mainContainer");
+        container.innerHTML =
+          renderHero() +
+          renderAbout() +
+          renderEducation() +
+          renderExperience() +
+          renderSkills() +
+          renderProjects() +
+          renderCertificates() +
+          renderContact();
+        attachProjectListeners(); // Fix bug PDF
+      }
+
+      function renderHero() {
+        const p = portfolioData.profile;
+        return `
+                <div class="win-window" id="beranda">
+                    <div class="win-titlebar">
+                        <div class="win-title"><div class="win-title-icon"></div><span>Portfolio.exe - Beranda</span></div>
+                        <div class="win-buttons"><div class="win-btn">_</div><div class="win-btn">□</div><div class="win-btn close">×</div></div>
+                    </div>
+                    <div class="win-content" style="text-align: center; padding: 60px 20px;">
+                        <div style="font-size: 64px; margin-bottom: 20px;">
+                            ${p.photo ? `<img src="${p.photo}" style="width:120px;height:120px;border-radius:50%;border:4px outset var(--win-border-light);">` : "👤"}
+                        </div>
+                        <h2 style="font-size: 28px; color: var(--win-blue); margin-bottom: 8px;">${p.name}</h2>
+                        <p style="color: var(--win-text-muted); font-size: 14px; margin-bottom: 16px;">${p.title}</p>
+                        <p style="font-size: 13px; max-width: 600px; margin: 0 auto;">${p.bio}</p>
+                        <div style="margin-top: 24px;">
+                            <button class="win-button primary" onclick="document.getElementById('proyek').scrollIntoView()">📂 Lihat Proyek</button>
+                        </div>
+                    </div>
+                </div>`;
+      }
+
+      function renderAbout() {
+        return `
+                <div class="win-window" id="tentang">
+                    <div class="win-titlebar">
+                        <div class="win-title"><div class="win-title-icon" style="background: linear-gradient(135deg, #87CEEB, #4682B4); border-color: #4682B4;"></div><span>TentangSaya.exe</span></div>
+                        <div class="win-buttons"><div class="win-btn">_</div><div class="win-btn">□</div><div class="win-btn close">×</div></div>
+                    </div>
+                    <div class="win-content">
+                        <div class="section-title">👤 Tentang Saya</div>
+                        <p style="font-size: 13px; line-height: 1.7;">${portfolioData.profile.about}</p>
+                    </div>
+                </div>`;
+      }
+
+      function renderEducation() {
+        const items = portfolioData.education
+          .map(
+            (edu) => `
+                <div class="info-card">
+                    <div class="info-card-header">🎓 ${edu.institution}</div>
+                    <div class="info-card-body">
+                        <div style="font-weight: bold; margin-bottom: 4px;">${edu.degree}</div>
+                        <div style="color: var(--win-text-muted); font-size: 11px; margin-bottom: 6px;">📅 ${edu.year}</div>
+                        <div>${edu.description}</div>
+                    </div>
+                </div>`,
+          )
+          .join("");
+        return `
+                <div class="win-window" id="pendidikan">
+                    <div class="win-titlebar">
+                        <div class="win-title"><div class="win-title-icon" style="background: linear-gradient(135deg, #DDA0DD, #8B008B); border-color: #8B008B;"></div><span>Pendidikan.exe</span></div>
+                        <div class="win-buttons"><div class="win-btn">_</div><div class="win-btn">□</div><div class="win-btn close">×</div></div>
+                    </div>
+                    <div class="win-content">
+                        <div class="section-title">🎓 Latar Belakang Pendidikan</div>
+                        <div class="info-grid">${items}</div>
+                    </div>
+                </div>`;
+      }
+
+      // FOTO DIHAPUS dari experience
+      function renderExperience() {
+        const items = portfolioData.experience
+          .map(
+            (exp) => `
+                <div class="info-card">
+                    <div class="info-card-header">💼 ${exp.company}</div>
+                    <div class="info-card-body">
+                        <div style="font-weight: bold; margin-bottom: 4px;">${exp.position}</div>
+                        <div style="color: var(--win-text-muted); font-size: 11px; margin-bottom: 6px;">📅 ${exp.year}</div>
+                        <div>${exp.description}</div>
+                    </div>
+                </div>`,
+          )
+          .join("");
+        return `
+                <div class="win-window" id="pengalaman">
+                    <div class="win-titlebar">
+                        <div class="win-title"><div class="win-title-icon" style="background: linear-gradient(135deg, #90EE90, #228B22); border-color: #228B22;"></div><span>Pengalaman.exe</span></div>
+                        <div class="win-buttons"><div class="win-btn">_</div><div class="win-btn">□</div><div class="win-btn close">×</div></div>
+                    </div>
+                    <div class="win-content">
+                        <div class="section-title">💼 Pengalaman Kerja</div>
+                        <div class="info-grid">${items}</div>
+                    </div>
+                </div>`;
+      }
+
+      function renderSkills() {
+        const cats = portfolioData.skills
+          .map(
+            (s) => `
+                <div class="skills-category">
+                    <div class="skills-category-header">⚡ ${s.category}</div>
+                    <div class="skills-category-body">
+                        ${s.items.map((item) => `<span class="skill-chip">${item}</span>`).join("")}
+                    </div>
+                </div>
+            `,
+          )
+          .join("");
+        return `
+                <div class="win-window" id="keahlian">
+                    <div class="win-titlebar">
+                        <div class="win-title"><div class="win-title-icon" style="background: linear-gradient(135deg, #FFB6C1, #DC143C); border-color: #DC143C;"></div><span>Experience & Skills.exe</span></div>
+                        <div class="win-buttons"><div class="win-btn">_</div><div class="win-btn">□</div><div class="win-btn close">×</div></div>
+                    </div>
+                    <div class="win-content">
+                        <div class="section-title">⚡ Experience & Skills</div>
+                        ${cats}
+                    </div>
+                </div>`;
+      }
+
+      // BUG FIX: pakai data-pdf & data-title, bukan onclick inline
+      function renderProjects() {
+        const cats = ["All", ...portfolioData.categories];
+        const filterBtns = cats
+          .map(
+            (cat) =>
+              `<button class="filter-btn ${cat === currentFilter ? "active" : ""}" onclick="filterProjects('${cat}')">${cat}</button>`,
+          )
+          .join("");
+
+        const filtered =
+          currentFilter === "All"
+            ? portfolioData.projects
+            : portfolioData.projects.filter(
+                (p) => p.category === currentFilter,
+              );
+
+        const cards = filtered
+          .map(
+            (proj) => `
+                <div class="project-card" data-pdf="${proj.pdf || ""}" data-title="${escapeHtml(proj.title)}">
+                    <div class="project-thumb">
+                        ${proj.thumbnail ? `<img src="${proj.thumbnail}" alt="${escapeHtml(proj.title)}">` : "📄"}
+                    </div>
+                    <div class="project-info">
+                        <div class="project-title">${proj.title}</div>
+                        <span class="project-cat">${proj.category}</span>
+                        <div class="project-desc">${proj.description}</div>
+                        ${proj.pdf ? '<div style="margin-top:8px;font-size:11px;color:var(--win-blue);">📖 Klik untuk membuka PDF</div>' : ""}
+                    </div>
+                </div>`,
+          )
+          .join("");
+
+        return `
+                <div class="win-window" id="proyek">
+                    <div class="win-titlebar">
+                        <div class="win-title"><div class="win-title-icon" style="background: linear-gradient(135deg, #FFD700, #FF8C00); border-color: #FF8C00;"></div><span>Proyek.exe</span></div>
+                        <div class="win-buttons"><div class="win-btn">_</div><div class="win-btn">□</div><div class="win-btn close">×</div></div>
+                    </div>
+                    <div class="win-content">
+                        <div class="section-title">📁 Proyek & Pengalaman</div>
+                        <div class="filter-bar">${filterBtns}</div>
+                        <div class="project-grid">${cards}</div>
+                    </div>
+                </div>`;
+      }
+
+      // Attach event listener setelah render (fix bug quote/spesial karakter)
+      function attachProjectListeners() {
+        document.querySelectorAll(".project-card[data-pdf]").forEach((card) => {
+          card.addEventListener("click", function () {
+            const pdf = this.getAttribute("data-pdf");
+            const title = this.getAttribute("data-title");
+            if (pdf) openPdf(pdf, title);
+          });
+        });
+      }
+
+      function renderCertificates() {
+        const items = portfolioData.certificates
+          .map(
+            (cert) => `
+                <div class="info-card" style="cursor: pointer;" onclick="${cert.pdf ? `openPdf('${cert.pdf}', '${escapeHtml(cert.name)}')` : ""}">
+                    <div class="info-card-header">🏆 ${cert.name}</div>
+                    <div class="info-card-body">
+                        <div style="font-weight: bold; margin-bottom: 4px;">${cert.issuer}</div>
+                        <div style="color: var(--win-text-muted); font-size: 11px; margin-bottom: 6px;">📅 ${cert.year}</div>
+                        ${cert.pdf ? '<div style="font-size: 11px; color: var(--win-blue);">📖 Klik untuk membuka PDF</div>' : ""}
+                    </div>
+                </div>`,
+          )
+          .join("");
+        return `
+                <div class="win-window" id="sertifikat">
+                    <div class="win-titlebar">
+                        <div class="win-title"><div class="win-title-icon" style="background: linear-gradient(135deg, #98FB98, #006400); border-color: #006400;"></div><span>Sertifikat.exe</span></div>
+                        <div class="win-buttons"><div class="win-btn">_</div><div class="win-btn">□</div><div class="win-btn close">×</div></div>
+                    </div>
+                    <div class="win-content">
+                        <div class="section-title">🏆 Sertifikat & Pencapaian</div>
+                        <div class="info-grid">${items}</div>
+                    </div>
+                </div>`;
+      }
+
+      function renderContact() {
+        const c = portfolioData.contact;
+        return `
+                <div class="win-window" id="kontak">
+                    <div class="win-titlebar">
+                        <div class="win-title"><div class="win-title-icon" style="background: linear-gradient(135deg, #F0E68C, #B8860B); border-color: #B8860B;"></div><span>Kontak.exe</span></div>
+                        <div class="win-buttons"><div class="win-btn">_</div><div class="win-btn">□</div><div class="win-btn close">×</div></div>
+                    </div>
+                    <div class="win-content">
+                        <div class="section-title">📧 Hubungi Saya</div>
+                        <div class="info-grid">
+                            <div class="info-card"><div class="info-card-header">📧 Email</div><div class="info-card-body" style="text-align: center;">${c.email}</div></div>
+                            <div class="info-card"><div class="info-card-header">📱 Telepon</div><div class="info-card-body" style="text-align: center;">${c.phone}</div></div>
+                            <div class="info-card"><div class="info-card-header">💼 LinkedIn</div><div class="info-card-body" style="text-align: center;">${c.linkedin}</div></div>
+                            <div class="info-card"><div class="info-card-header">🐙 GitHub</div><div class="info-card-body" style="text-align: center;">${c.github}</div></div>
+                            <div class="info-card"><div class="info-card-header">📍 Lokasi</div><div class="info-card-body" style="text-align: center;">${c.location}</div></div>
+                        </div>
+                    </div>
+                </div>`;
+      }
+
+      function filterProjects(cat) {
+        currentFilter = cat;
+        renderAll();
+        document.getElementById("proyek").scrollIntoView();
+      }
+
+      async function openPdf(pdfUrl, title) {
+        if (!pdfUrl) return;
+        document.getElementById("modalTitle").textContent =
+          title || "PDF Viewer";
+        const viewer = document.getElementById("pdfViewer");
+        viewer.innerHTML =
+          '<div style="padding:40px;text-align:center;">⏳ Memuat PDF...</div>';
+        document.getElementById("pdfModal").classList.add("active");
+
+        try {
+          const pdf = await pdfjsLib.getDocument(pdfUrl).promise;
+          viewer.innerHTML = "";
+          for (let i = 1; i <= pdf.numPages; i++) {
+            const page = await pdf.getPage(i);
+            const scale = 1.5;
+            const viewport = page.getViewport({ scale });
+            const canvas = document.createElement("canvas");
+            canvas.width = viewport.width;
+            canvas.height = viewport.height;
+            const ctx = canvas.getContext("2d");
+            await page.render({ canvasContext: ctx, viewport }).promise;
+            viewer.appendChild(canvas);
+            if (i < pdf.numPages) {
+              const br = document.createElement("div");
+              br.style.cssText =
+                "height:2px;background:linear-gradient(90deg,transparent,#C0C0C0,transparent);margin:8px 0;";
+              viewer.appendChild(br);
+            }
+            page.cleanup();
+          }
+          pdf.destroy();
+        } catch (err) {
+          console.error("PDF Error:", err);
+          viewer.innerHTML = `<div class="error-box">❌ Gagal memuat PDF.<br><br>Kemungkinan penyebab:<br>1. File tidak ada di folder <b>uploads/</b><br>2. Buka via server (bukan file://)<br>3. CORS policy browser<br><br><button class="win-button" onclick="closeModal()">Tutup</button></div>`;
+        }
+      }
+
+      function closeModal() {
+        document.getElementById("pdfModal").classList.remove("active");
+        document.getElementById("pdfViewer").innerHTML = "";
+      }
+
+      function escapeHtml(text) {
+        const div = document.createElement("div");
+        div.textContent = text;
+        return div.innerHTML;
+      }
+
+      function updateClock() {
+        const now = new Date();
+        const h = String(now.getHours()).padStart(2, "0");
+        const m = String(now.getMinutes()).padStart(2, "0");
+        document.getElementById("clock").textContent = `${h}:${m}`;
+      }
+      updateClock();
+      setInterval(updateClock, 1000);
+
+      function setActive(el) {
+        document
+          .querySelectorAll(".task-item")
+          .forEach((i) => i.classList.remove("active"));
+        el.classList.add("active");
+      }
+
+      document.addEventListener("keydown", (e) => {
+        if ((e.ctrlKey || e.metaKey) && (e.key === "p" || e.key === "s")) {
+          e.preventDefault();
+          return false;
+        }
+      });
+      document.addEventListener("contextmenu", (e) => e.preventDefault());
+
+      loadData();
+    </script>
+  </body>
+</html>

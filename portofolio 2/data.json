@@ -1,0 +1,92 @@
+{
+  "profile": {
+    "name": "Nama Lengkap Anda",
+    "title": "Full Stack Developer & Automation Engineer",
+    "photo": "",
+    "bio": "Deskripsi singkat tentang diri Anda.",
+    "about": "Tulis tentang diri Anda secara detail di sini."
+  },
+  "education": [
+    {
+      "id": 1,
+      "institution": "Universitas Indonesia",
+      "degree": "S1 Teknik Informatika",
+      "year": "2018 - 2022",
+      "description": "Fokus pada pengembangan perangkat lunak dan sistem otomasi."
+    }
+  ],
+  "experience": [
+    {
+      "id": 1,
+      "company": "PT Teknologi Nusantara",
+      "position": "Senior Developer",
+      "year": "2022 - Sekarang",
+      "description": "Mengembangkan aplikasi web dan sistem otomasi perusahaan.",
+      "image": "uploads/exp1.jpg"
+    }
+  ],
+  "skills": [
+    {
+      "category": "Programming",
+      "items": ["Node.js", "HTML", "CSS", "JS", "python"]
+    },
+    {
+      "category": "Automation",
+      "items": ["GX Works2", "GT Designer", "CX Programmer"]
+    },
+    {
+      "category": "IOT",
+      "items": ["Arduino IDE", "VS Code", "KiCad"]
+    }
+  ],
+  "categories": [
+    "Programming",
+    "Automation",
+    "IOT",
+    "Mechanical",
+    "Other",
+    "mekanik"
+  ],
+  "projects": [
+    {
+      "id": 1,
+      "title": "Sistem Monitoring IoT",
+      "category": "IOT",
+      "description": "Monitoring suhu dan kelembaban real-time menggunakan ESP32.",
+      "pdf": "uploads/iot-project.pdf",
+      "thumbnail": "uploads/proj1.jpg"
+    },
+    {
+      "id": 2,
+      "title": "hg",
+      "category": "Programming",
+      "description": "gofar",
+      "pdf": "uploads/HG111_New_Homogenizer.pdf",
+      "thumbnail": "uploads/gofar.png"
+    },
+    {
+      "id": 3,
+      "title": "hg2",
+      "category": "Programming",
+      "description": "gofar",
+      "pdf": "uploads/HG111_New_Homogenizer.pdf",
+      "thumbnail": "uploads/gofar.png"
+    }
+  ],
+  "certificates": [
+    {
+      "id": 1,
+      "name": "AWS Certified Developer",
+      "issuer": "Amazon Web Services",
+      "year": "2023",
+      "pdf": "uploads/aws-cert.pdf"
+    }
+  ],
+  "contact": {
+    "email": "email@example.com",
+    "phone": "+62 812-3456-7890",
+    "linkedin": "linkedin.com/in/username",
+    "github": "github.com/username",
+    "location": "Jakarta, Indonesia"
+  }
+}

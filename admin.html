@@ -1,0 +1,1607 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Panel - Windows XP</title>
+    <style>
+      :root {
+        --win-bg: #008080;
+        --win-window: #ece9d8;
+        --win-title-start: #0a246a;
+        --win-title-end: #a6caf0;
+        --win-title-text: #ffffff;
+        --win-border-light: #ffffff;
+        --win-border-dark: #808080;
+        --win-border-darker: #404040;
+        --win-button: #ece9d8;
+        --win-text: #000000;
+        --win-text-muted: #404040;
+        --win-blue: #000080;
+        --win-highlight: #316ac5;
+        --win-red: #cc0000;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: Tahoma, Verdana, Arial, sans-serif;
+        background: var(--win-bg);
+        color: var(--win-text);
+        line-height: 1.5;
+        min-height: 100vh;
+        padding-bottom: 60px;
+      }
+
+      .taskbar {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 42px;
+        background: linear-gradient(180deg, #1f91e5 0%, #0055a4 100%);
+        border-top: 2px solid #4c8bc0;
+        display: flex;
+        align-items: center;
+        padding: 0 4px;
+        z-index: 10000;
+      }
+      .start-btn {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        background: linear-gradient(180deg, #3da35d 0%, #1e7a3a 100%);
+        border: 2px outset #3da35d;
+        border-radius: 4px;
+        color: white;
+        font-weight: bold;
+        font-size: 13px;
+        padding: 4px 12px;
+        cursor: pointer;
+        height: 34px;
+        margin-right: 8px;
+        text-decoration: none;
+      }
+      .taskbar-items {
+        display: flex;
+        gap: 4px;
+        flex: 1;
+        align-items: center;
+        justify-content: center;
+      }
+      .task-item {
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.15) 0%,
+          rgba(0, 0, 0, 0.1) 100%
+        );
+        border: 2px outset rgba(255, 255, 255, 0.2);
+        border-radius: 3px;
+        color: white;
+        font-size: 12px;
+        padding: 5px 16px;
+        cursor: pointer;
+        text-decoration: none;
+        height: 32px;
+        display: flex;
+        align-items: center;
+      }
+      .task-item.active {
+        background: linear-gradient(
+          180deg,
+          rgba(0, 0, 0, 0.2) 0%,
+          rgba(255, 255, 255, 0.1) 100%
+        );
+        border-style: inset;
+      }
+      .taskbar-clock {
+        color: white;
+        font-size: 12px;
+        padding: 4px 12px;
+        border: 2px inset rgba(0, 0, 0, 0.2);
+        border-radius: 3px;
+        background: rgba(0, 0, 0, 0.1);
+        min-width: 70px;
+        text-align: center;
+      }
+
+      .desktop-icons {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        z-index: 100;
+      }
+      .desktop-icon {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        cursor: pointer;
+        width: 80px;
+        text-align: center;
+        color: white;
+        font-size: 12px;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+        text-decoration: none;
+      }
+      .d-icon-box {
+        width: 48px;
+        height: 48px;
+        background: linear-gradient(135deg, #ffd700, #ffa500);
+        border: 2px outset #ffd700;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+      }
+
+      .win-window {
+        background: var(--win-window);
+        border: 2px solid var(--win-border-darker);
+        border-right-color: var(--win-border-light);
+        border-bottom-color: var(--win-border-light);
+        box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.4);
+        margin-bottom: 24px;
+        position: relative;
+      }
+      .win-window::before {
+        content: "";
+        position: absolute;
+        inset: -2px;
+        border: 2px solid var(--win-border-dark);
+        border-right-color: var(--win-border-light);
+        border-bottom-color: var(--win-border-light);
+        pointer-events: none;
+        z-index: -1;
+      }
+      .win-titlebar {
+        background: linear-gradient(
+          180deg,
+          var(--win-title-end) 0%,
+          var(--win-title-start) 100%
+        );
+        padding: 6px 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 2px solid var(--win-border-darker);
+      }
+      .win-title {
+        color: var(--win-title-text);
+        font-weight: bold;
+        font-size: 13px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.2);
+      }
+      .win-title-icon {
+        width: 16px;
+        height: 16px;
+        background: linear-gradient(135deg, #ffd700, #ff8c00);
+        border: 1px solid #cc7000;
+        border-radius: 2px;
+      }
+      .win-buttons {
+        display: flex;
+        gap: 4px;
+      }
+      .win-btn {
+        width: 22px;
+        height: 20px;
+        background: var(--win-button);
+        border: 2px outset var(--win-button);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        font-weight: bold;
+        cursor: pointer;
+        color: #000;
+      }
+      .win-btn.close {
+        background: linear-gradient(180deg, #ff6b6b 0%, #cc0000 100%);
+        color: white;
+        border-color: #cc0000;
+      }
+      .win-content {
+        padding: 16px;
+      }
+
+      .desktop-area {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 20px 20px 80px;
+      }
+
+      .form-group {
+        margin-bottom: 12px;
+      }
+      .form-label {
+        display: block;
+        font-size: 12px;
+        font-weight: bold;
+        margin-bottom: 4px;
+        color: var(--win-text);
+      }
+      .form-input,
+      .form-textarea,
+      .form-select {
+        width: 100%;
+        padding: 6px 8px;
+        font-family: Tahoma, Verdana, Arial, sans-serif;
+        font-size: 13px;
+        border: 2px inset var(--win-window);
+        background: #ffffff;
+      }
+      .form-textarea {
+        min-height: 80px;
+        resize: vertical;
+      }
+      .form-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 12px;
+      }
+
+      .win-button {
+        background: var(--win-button);
+        border: 2px outset var(--win-button);
+        padding: 6px 20px;
+        font-family: Tahoma, Verdana, Arial, sans-serif;
+        font-size: 13px;
+        cursor: pointer;
+        color: var(--win-text);
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        margin-right: 8px;
+        margin-bottom: 8px;
+      }
+      .win-button:hover {
+        background: #d4d0c8;
+      }
+      .win-button:active {
+        border-style: inset;
+      }
+      .win-button.primary {
+        background: linear-gradient(180deg, #e8f0fe 0%, #b8d4f0 100%);
+        border-color: #7a96df;
+        font-weight: bold;
+      }
+      .win-button.danger {
+        background: linear-gradient(180deg, #ff6b6b 0%, #cc0000 100%);
+        color: white;
+        border-color: #cc0000;
+      }
+
+      .data-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 12px;
+        margin-top: 12px;
+      }
+      .data-table th {
+        background: linear-gradient(
+          180deg,
+          var(--win-title-end) 0%,
+          var(--win-title-start) 100%
+        );
+        color: white;
+        padding: 8px;
+        text-align: left;
+        border: 2px solid var(--win-border-darker);
+      }
+      .data-table td {
+        padding: 8px;
+        border: 2px solid var(--win-border-dark);
+        background: #ffffff;
+      }
+      .data-table tr:hover td {
+        background: #f0f0f0;
+      }
+
+      .upload-area {
+        border: 3px dashed var(--win-border-dark);
+        padding: 24px;
+        text-align: center;
+        cursor: pointer;
+        background: #f5f3ee;
+        margin-bottom: 12px;
+      }
+      .upload-area:hover {
+        background: #e8e6e1;
+        border-color: var(--win-highlight);
+        border-style: solid;
+      }
+
+      .tab-bar {
+        display: flex;
+        gap: 4px;
+        margin-bottom: 16px;
+        flex-wrap: wrap;
+      }
+      .tab-btn {
+        background: var(--win-button);
+        border: 2px outset var(--win-button);
+        padding: 6px 16px;
+        font-family: Tahoma, Verdana, Arial, sans-serif;
+        font-size: 12px;
+        cursor: pointer;
+      }
+      .tab-btn.active {
+        background: linear-gradient(
+          180deg,
+          var(--win-title-end) 0%,
+          var(--win-title-start) 100%
+        );
+        color: white;
+        border: 2px solid var(--win-title-start);
+      }
+      .tab-panel {
+        display: none;
+      }
+      .tab-panel.active {
+        display: block;
+      }
+
+      .login-overlay {
+        position: fixed;
+        inset: 0;
+        background: var(--win-bg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 30000;
+      }
+      .login-overlay.hidden {
+        display: none;
+      }
+
+      .cat-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: #e8e6e1;
+        border: 2px outset var(--win-button);
+        padding: 4px 10px;
+        font-size: 12px;
+        margin: 4px;
+      }
+      .cat-tag button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: var(--win-red);
+        font-weight: bold;
+      }
+
+      ::-webkit-scrollbar {
+        width: 16px;
+        height: 16px;
+      }
+      ::-webkit-scrollbar-track {
+        background: var(--win-window);
+        border: 2px inset var(--win-window);
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--win-button);
+        border: 2px outset var(--win-button);
+      }
+
+      @media (max-width: 768px) {
+        .desktop-icons {
+          display: none;
+        }
+        .desktop-area {
+          padding: 10px 10px 80px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="login-overlay" id="loginScreen">
+      <div class="win-window" style="width: 360px">
+        <div class="win-titlebar">
+          <div class="win-title">
+            <div class="win-title-icon"></div>
+            <span>Login - Admin Panel</span>
+          </div>
+          <div class="win-buttons"><div class="win-btn close">×</div></div>
+        </div>
+        <div class="win-content" style="text-align: center">
+          <div style="font-size: 48px; margin-bottom: 16px">🔐</div>
+          <h3 style="margin-bottom: 16px; color: var(--win-blue)">
+            Admin Panel
+          </h3>
+          <div class="form-group">
+            <input
+              type="password"
+              id="loginPass"
+              class="form-input"
+              placeholder="Masukkan password"
+              style="text-align: center"
+            />
+          </div>
+          <button
+            class="win-button primary"
+            onclick="doLogin()"
+            style="width: 100%; justify-content: center"
+          >
+            🔓 Login
+          </button>
+          <p
+            style="
+              font-size: 11px;
+              color: var(--win-text-muted);
+              margin-top: 12px;
+            "
+          >
+            Default: admin123
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="desktop-icons">
+      <a href="index.html" class="desktop-icon"
+        ><div class="d-icon-box">🏠</div>
+        <span>Portfolio</span></a
+      >
+      <div class="desktop-icon" onclick="showTab('profile')">
+        <div
+          class="d-icon-box"
+          style="
+            background: linear-gradient(135deg, #87ceeb, #4682b4);
+            border-color: #4682b4;
+          "
+        >
+          👤
+        </div>
+        <span>Profil</span>
+      </div>
+      <div class="desktop-icon" onclick="showTab('education')">
+        <div
+          class="d-icon-box"
+          style="
+            background: linear-gradient(135deg, #dda0dd, #8b008b);
+            border-color: #8b008b;
+          "
+        >
+          🎓
+        </div>
+        <span>Pendidikan</span>
+      </div>
+      <div class="desktop-icon" onclick="showTab('experience')">
+        <div
+          class="d-icon-box"
+          style="
+            background: linear-gradient(135deg, #90ee90, #228b22);
+            border-color: #228b22;
+          "
+        >
+          💼
+        </div>
+        <span>Pengalaman</span>
+      </div>
+      <div class="desktop-icon" onclick="showTab('skills')">
+        <div
+          class="d-icon-box"
+          style="
+            background: linear-gradient(135deg, #ffb6c1, #dc143c);
+            border-color: #dc143c;
+          "
+        >
+          ⚡
+        </div>
+        <span>Keahlian</span>
+      </div>
+      <div class="desktop-icon" onclick="showTab('projects')">
+        <div
+          class="d-icon-box"
+          style="
+            background: linear-gradient(135deg, #ffd700, #ff8c00);
+            border-color: #ff8c00;
+          "
+        >
+          📁
+        </div>
+        <span>Proyek</span>
+      </div>
+      <div class="desktop-icon" onclick="showTab('categories')">
+        <div
+          class="d-icon-box"
+          style="
+            background: linear-gradient(135deg, #98fb98, #006400);
+            border-color: #006400;
+          "
+        >
+          🏷️
+        </div>
+        <span>Kategori</span>
+      </div>
+      <div class="desktop-icon" onclick="showTab('certificates')">
+        <div
+          class="d-icon-box"
+          style="
+            background: linear-gradient(135deg, #f0e68c, #b8860b);
+            border-color: #b8860b;
+          "
+        >
+          🏆
+        </div>
+        <span>Sertifikat</span>
+      </div>
+      <div class="desktop-icon" onclick="showTab('contact')">
+        <div
+          class="d-icon-box"
+          style="
+            background: linear-gradient(135deg, #87cefa, #0000ff);
+            border-color: #0000ff;
+          "
+        >
+          📧
+        </div>
+        <span>Kontak</span>
+      </div>
+      <div class="desktop-icon" onclick="showTab('export')">
+        <div
+          class="d-icon-box"
+          style="
+            background: linear-gradient(135deg, #d3d3d3, #696969);
+            border-color: #696969;
+          "
+        >
+          💾
+        </div>
+        <span>Export</span>
+      </div>
+    </div>
+
+    <div class="taskbar">
+      <a href="index.html" class="start-btn">
+        <div
+          style="
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(
+              135deg,
+              #ff6b6b 25%,
+              #4ecdc4 25%,
+              #4ecdc4 50%,
+              #45b7d1 50%,
+              #45b7d1 75%,
+              #96ceb4 75%
+            );
+            border-radius: 3px;
+          "
+        ></div>
+        <span>start</span>
+      </a>
+      <div class="taskbar-items">
+        <span class="task-item active">Admin Panel</span>
+      </div>
+      <div class="taskbar-clock" id="clock">--:--</div>
+    </div>
+
+    <div class="desktop-area" id="mainArea" style="display: none">
+      <div class="tab-panel active" id="tab-profile">
+        <div class="win-window">
+          <div class="win-titlebar">
+            <div class="win-title">
+              <div
+                class="win-title-icon"
+                style="
+                  background: linear-gradient(135deg, #87ceeb, #4682b4);
+                  border-color: #4682b4;
+                "
+              ></div>
+              <span>Profil.exe</span>
+            </div>
+            <div class="win-buttons"><div class="win-btn close">×</div></div>
+          </div>
+          <div class="win-content">
+            <div class="form-group">
+              <label class="form-label">Nama Lengkap</label
+              ><input type="text" id="profName" class="form-input" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Jabatan/Title</label
+              ><input type="text" id="profTitle" class="form-input" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Foto (path atau URL)</label
+              ><input
+                type="text"
+                id="profPhoto"
+                class="form-input"
+                placeholder="uploads/photo.jpg"
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Bio Singkat</label
+              ><input type="text" id="profBio" class="form-input" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Tentang Saya (Panjang)</label
+              ><textarea id="profAbout" class="form-textarea"></textarea>
+            </div>
+            <button class="win-button primary" onclick="saveProfile()">
+              💾 Simpan Profil
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-panel" id="tab-education">
+        <div class="win-window">
+          <div class="win-titlebar">
+            <div class="win-title">
+              <div
+                class="win-title-icon"
+                style="
+                  background: linear-gradient(135deg, #dda0dd, #8b008b);
+                  border-color: #8b008b;
+                "
+              ></div>
+              <span>Pendidikan.exe</span>
+            </div>
+            <div class="win-buttons"><div class="win-btn close">×</div></div>
+          </div>
+          <div class="win-content">
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Institusi</label
+                ><input type="text" id="eduInst" class="form-input" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Gelar/Jurusan</label
+                ><input type="text" id="eduDegree" class="form-input" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Tahun</label
+                ><input
+                  type="text"
+                  id="eduYear"
+                  class="form-input"
+                  placeholder="2018 - 2022"
+                />
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Deskripsi</label
+              ><textarea id="eduDesc" class="form-textarea"></textarea>
+            </div>
+            <button class="win-button primary" onclick="addEducation()">
+              ➕ Tambah Pendidikan
+            </button>
+            <table class="data-table" id="eduTable">
+              <thead>
+                <tr>
+                  <th>Institusi</th>
+                  <th>Gelar</th>
+                  <th>Tahun</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-panel" id="tab-experience">
+        <div class="win-window">
+          <div class="win-titlebar">
+            <div class="win-title">
+              <div
+                class="win-title-icon"
+                style="
+                  background: linear-gradient(135deg, #90ee90, #228b22);
+                  border-color: #228b22;
+                "
+              ></div>
+              <span>Pengalaman.exe</span>
+            </div>
+            <div class="win-buttons"><div class="win-btn close">×</div></div>
+          </div>
+          <div class="win-content">
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Perusahaan</label
+                ><input type="text" id="expCompany" class="form-input" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Posisi</label
+                ><input type="text" id="expPos" class="form-input" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Tahun</label
+                ><input
+                  type="text"
+                  id="expYear"
+                  class="form-input"
+                  placeholder="2022 - Sekarang"
+                />
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Deskripsi</label
+              ><textarea id="expDesc" class="form-textarea"></textarea>
+            </div>
+            <button class="win-button primary" onclick="addExperience()">
+              ➕ Tambah Pengalaman
+            </button>
+            <table class="data-table" id="expTable">
+              <thead>
+                <tr>
+                  <th>Perusahaan</th>
+                  <th>Posisi</th>
+                  <th>Tahun</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-panel" id="tab-skills">
+        <div class="win-window">
+          <div class="win-titlebar">
+            <div class="win-title">
+              <div
+                class="win-title-icon"
+                style="
+                  background: linear-gradient(135deg, #ffb6c1, #dc143c);
+                  border-color: #dc143c;
+                "
+              ></div>
+              <span>Experience & Skills.exe</span>
+            </div>
+            <div class="win-buttons"><div class="win-btn close">×</div></div>
+          </div>
+          <div class="win-content">
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Kategori Skill</label>
+                <select id="skillCatSelect" class="form-select"></select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">atau Kategori Baru</label>
+                <input
+                  type="text"
+                  id="skillCatNew"
+                  class="form-input"
+                  placeholder="Misal: IOT"
+                />
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Teknologi (pisahkan dengan koma)</label>
+              <input
+                type="text"
+                id="skillItems"
+                class="form-input"
+                placeholder="Node.js, HTML, CSS, JS, Python"
+              />
+            </div>
+            <button class="win-button primary" onclick="addSkillCategory()">
+              ➕ Tambah Kategori Skill
+            </button>
+            <div style="margin-top: 16px">
+              <div
+                style="
+                  font-weight: bold;
+                  color: var(--win-blue);
+                  font-size: 14px;
+                  margin-bottom: 12px;
+                "
+              >
+                ⚡ Kategori Skills
+              </div>
+              <div id="skillsList"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-panel" id="tab-projects">
+        <div class="win-window">
+          <div class="win-titlebar">
+            <div class="win-title">
+              <div
+                class="win-title-icon"
+                style="
+                  background: linear-gradient(135deg, #ffd700, #ff8c00);
+                  border-color: #ff8c00;
+                "
+              ></div>
+              <span>Proyek.exe</span>
+            </div>
+            <div class="win-buttons"><div class="win-btn close">×</div></div>
+          </div>
+          <div class="win-content">
+            <div class="form-group">
+              <label class="form-label">Judul Proyek</label
+              ><input type="text" id="projTitle" class="form-input" />
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Kategori</label
+                ><select id="projCat" class="form-select"></select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Thumbnail/Gambar Card (path)</label
+                ><input
+                  type="text"
+                  id="projThumb"
+                  class="form-input"
+                  placeholder="uploads/proj1.jpg"
+                />
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Deskripsi</label
+              ><textarea id="projDesc" class="form-textarea"></textarea>
+            </div>
+            <div class="upload-area" id="projUpload">
+              <div>📁 Drop file PDF atau klik untuk pilih</div>
+              <div
+                style="
+                  font-size: 11px;
+                  color: var(--win-text-muted);
+                  margin-top: 4px;
+                "
+              >
+                File akan di-download untuk disimpan di folder uploads/
+              </div>
+              <input
+                type="file"
+                id="projPdfInput"
+                accept=".pdf"
+                style="display: none"
+              />
+            </div>
+            <div
+              id="projPdfInfo"
+              style="
+                font-size: 12px;
+                margin-bottom: 12px;
+                color: var(--win-text-muted);
+              "
+            ></div>
+            <button class="win-button primary" onclick="addProject()">
+              ➕ Tambah Proyek
+            </button>
+            <table class="data-table" id="projTable">
+              <thead>
+                <tr>
+                  <th>Judul</th>
+                  <th>Kategori</th>
+                  <th>Gambar</th>
+                  <th>PDF</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-panel" id="tab-categories">
+        <div class="win-window">
+          <div class="win-titlebar">
+            <div class="win-title">
+              <div
+                class="win-title-icon"
+                style="
+                  background: linear-gradient(135deg, #98fb98, #006400);
+                  border-color: #006400;
+                "
+              ></div>
+              <span>Kategori.exe</span>
+            </div>
+            <div class="win-buttons"><div class="win-btn close">×</div></div>
+          </div>
+          <div class="win-content">
+            <div class="form-group">
+              <label class="form-label">Nama Kategori Baru</label
+              ><input
+                type="text"
+                id="newCat"
+                class="form-input"
+                placeholder="Misal: Electrical"
+              />
+            </div>
+            <button class="win-button primary" onclick="addCategory()">
+              ➕ Tambah Kategori
+            </button>
+            <div style="margin-top: 16px">
+              <div
+                style="
+                  font-weight: bold;
+                  color: var(--win-blue);
+                  font-size: 14px;
+                  margin-bottom: 12px;
+                "
+              >
+                🏷️ Kategori Proyek
+              </div>
+              <div id="catList"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-panel" id="tab-certificates">
+        <div class="win-window">
+          <div class="win-titlebar">
+            <div class="win-title">
+              <div
+                class="win-title-icon"
+                style="
+                  background: linear-gradient(135deg, #f0e68c, #b8860b);
+                  border-color: #b8860b;
+                "
+              ></div>
+              <span>Sertifikat.exe</span>
+            </div>
+            <div class="win-buttons"><div class="win-btn close">×</div></div>
+          </div>
+          <div class="win-content">
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Nama Sertifikat</label
+                ><input type="text" id="certName" class="form-input" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Penerbit</label
+                ><input type="text" id="certIssuer" class="form-input" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Tahun</label
+                ><input type="text" id="certYear" class="form-input" />
+              </div>
+            </div>
+            <div class="upload-area" id="certUpload">
+              <div>📁 Drop file PDF sertifikat atau klik untuk pilih</div>
+              <input
+                type="file"
+                id="certPdfInput"
+                accept=".pdf"
+                style="display: none"
+              />
+            </div>
+            <div
+              id="certPdfInfo"
+              style="
+                font-size: 12px;
+                margin-bottom: 12px;
+                color: var(--win-text-muted);
+              "
+            ></div>
+            <button class="win-button primary" onclick="addCertificate()">
+              ➕ Tambah Sertifikat
+            </button>
+            <table class="data-table" id="certTable">
+              <thead>
+                <tr>
+                  <th>Nama</th>
+                  <th>Penerbit</th>
+                  <th>Tahun</th>
+                  <th>PDF</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-panel" id="tab-contact">
+        <div class="win-window">
+          <div class="win-titlebar">
+            <div class="win-title">
+              <div
+                class="win-title-icon"
+                style="
+                  background: linear-gradient(135deg, #87cefa, #0000ff);
+                  border-color: #0000ff;
+                "
+              ></div>
+              <span>Kontak.exe</span>
+            </div>
+            <div class="win-buttons"><div class="win-btn close">×</div></div>
+          </div>
+          <div class="win-content">
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Email</label
+                ><input type="text" id="conEmail" class="form-input" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Telepon</label
+                ><input type="text" id="conPhone" class="form-input" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">LinkedIn</label
+                ><input type="text" id="conLinked" class="form-input" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">GitHub</label
+                ><input type="text" id="conGit" class="form-input" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Lokasi</label
+                ><input type="text" id="conLoc" class="form-input" />
+              </div>
+            </div>
+            <button class="win-button primary" onclick="saveContact()">
+              💾 Simpan Kontak
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-panel" id="tab-export">
+        <div class="win-window">
+          <div class="win-titlebar">
+            <div class="win-title">
+              <div
+                class="win-title-icon"
+                style="
+                  background: linear-gradient(135deg, #d3d3d3, #696969);
+                  border-color: #696969;
+                "
+              ></div>
+              <span>Export.exe</span>
+            </div>
+            <div class="win-buttons"><div class="win-btn close">×</div></div>
+          </div>
+          <div class="win-content">
+            <div
+              style="
+                font-weight: bold;
+                color: var(--win-blue);
+                font-size: 14px;
+                margin-bottom: 12px;
+              "
+            >
+              💾 Export & Import Data
+            </div>
+            <p
+              style="
+                font-size: 12px;
+                margin-bottom: 16px;
+                color: var(--win-text-muted);
+              "
+            >
+              Semua perubahan tersimpan di LocalStorage. Export ke JSON untuk
+              deployment.<br />
+              Simpan file PDF dan gambar yang diupload ke folder
+              <b>uploads/</b> secara manual.
+            </p>
+            <button class="win-button primary" onclick="exportJSON()">
+              📥 Export data.json
+            </button>
+            <button class="win-button" onclick="saveToLocal()">
+              💾 Simpan ke LocalStorage
+            </button>
+            <button class="win-button" onclick="loadFromLocal()">
+              🔄 Muat dari LocalStorage
+            </button>
+            <div style="margin-top: 16px">
+              <label class="form-label">Import data.json</label>
+              <input
+                type="file"
+                id="importFile"
+                accept=".json"
+                onchange="importJSON(this)"
+                class="form-input"
+              />
+            </div>
+            <div
+              style="
+                margin-top: 16px;
+                padding: 12px;
+                background: #f5f3ee;
+                border: 2px inset var(--win-window);
+                font-size: 12px;
+              "
+            >
+              <b>Petunjuk Deployment:</b><br />
+              1. Export data.json dan simpan di folder yang sama dengan
+              index.html<br />
+              2. Simpan file PDF & gambar ke folder uploads/<br />
+              3. Upload semua file ke web server
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let data = {
+        profile: { name: "", title: "", photo: "", bio: "", about: "" },
+        education: [],
+        experience: [],
+        skills: [],
+        categories: ["Programming", "Automation", "IOT", "Mechanical", "Other"],
+        projects: [],
+        certificates: [],
+        contact: {
+          email: "",
+          phone: "",
+          linkedin: "",
+          github: "",
+          location: "",
+        },
+      };
+      let nextId = {
+        education: 1,
+        experience: 1,
+        projects: 1,
+        certificates: 1,
+      };
+      let tempPdf = { project: null, certificate: null };
+
+      function doLogin() {
+        const pass = document.getElementById("loginPass").value;
+        if (pass === "admin123") {
+          document.getElementById("loginScreen").classList.add("hidden");
+          document.getElementById("mainArea").style.display = "block";
+          initData();
+        } else {
+          alert("Password salah!");
+        }
+      }
+      document.getElementById("loginPass").addEventListener("keypress", (e) => {
+        if (e.key === "Enter") doLogin();
+      });
+
+      function initData() {
+        const saved = localStorage.getItem("portfolioData");
+        if (saved) {
+          data = JSON.parse(saved);
+          updateNextIds();
+        }
+        refreshAll();
+      }
+
+      function updateNextIds() {
+        nextId.education =
+          data.education.length > 0
+            ? Math.max(...data.education.map((x) => x.id)) + 1
+            : 1;
+        nextId.experience =
+          data.experience.length > 0
+            ? Math.max(...data.experience.map((x) => x.id)) + 1
+            : 1;
+        nextId.projects =
+          data.projects.length > 0
+            ? Math.max(...data.projects.map((x) => x.id)) + 1
+            : 1;
+        nextId.certificates =
+          data.certificates.length > 0
+            ? Math.max(...data.certificates.map((x) => x.id)) + 1
+            : 1;
+      }
+
+      function refreshAll() {
+        loadProfile();
+        renderEdu();
+        renderExp();
+        renderSkills();
+        renderProjects();
+        renderCats();
+        renderCerts();
+        loadContact();
+        updateCatSelects();
+      }
+
+      function showTab(tab) {
+        document
+          .querySelectorAll(".tab-panel")
+          .forEach((p) => p.classList.remove("active"));
+        document.getElementById("tab-" + tab).classList.add("active");
+      }
+
+      function loadProfile() {
+        document.getElementById("profName").value = data.profile.name;
+        document.getElementById("profTitle").value = data.profile.title;
+        document.getElementById("profPhoto").value = data.profile.photo;
+        document.getElementById("profBio").value = data.profile.bio;
+        document.getElementById("profAbout").value = data.profile.about;
+      }
+      function saveProfile() {
+        data.profile = {
+          name: document.getElementById("profName").value,
+          title: document.getElementById("profTitle").value,
+          photo: document.getElementById("profPhoto").value,
+          bio: document.getElementById("profBio").value,
+          about: document.getElementById("profAbout").value,
+        };
+        saveToLocal();
+        alert("Profil disimpan!");
+      }
+
+      function addEducation() {
+        const item = {
+          id: nextId.education++,
+          institution: document.getElementById("eduInst").value,
+          degree: document.getElementById("eduDegree").value,
+          year: document.getElementById("eduYear").value,
+          description: document.getElementById("eduDesc").value,
+        };
+        data.education.push(item);
+        document.getElementById("eduInst").value = "";
+        document.getElementById("eduDegree").value = "";
+        document.getElementById("eduYear").value = "";
+        document.getElementById("eduDesc").value = "";
+        renderEdu();
+        saveToLocal();
+      }
+      function renderEdu() {
+        const tbody = document.querySelector("#eduTable tbody");
+        tbody.innerHTML = data.education
+          .map(
+            (e) => `
+                <tr><td>${e.institution}</td><td>${e.degree}</td><td>${e.year}</td>
+                <td><button class="win-button danger" onclick="deleteEdu(${e.id})">🗑️</button></td></tr>
+            `,
+          )
+          .join("");
+      }
+      function deleteEdu(id) {
+        data.education = data.education.filter((e) => e.id !== id);
+        renderEdu();
+        saveToLocal();
+      }
+
+      // FOTO DIHAPUS dari experience
+      function addExperience() {
+        const item = {
+          id: nextId.experience++,
+          company: document.getElementById("expCompany").value,
+          position: document.getElementById("expPos").value,
+          year: document.getElementById("expYear").value,
+          description: document.getElementById("expDesc").value,
+        };
+        data.experience.push(item);
+        document.getElementById("expCompany").value = "";
+        document.getElementById("expPos").value = "";
+        document.getElementById("expYear").value = "";
+        document.getElementById("expDesc").value = "";
+        renderExp();
+        saveToLocal();
+      }
+      function renderExp() {
+        const tbody = document.querySelector("#expTable tbody");
+        tbody.innerHTML = data.experience
+          .map(
+            (e) => `
+                <tr><td>${e.company}</td><td>${e.position}</td><td>${e.year}</td>
+                <td><button class="win-button danger" onclick="deleteExp(${e.id})">🗑️</button></td></tr>
+            `,
+          )
+          .join("");
+      }
+      function deleteExp(id) {
+        data.experience = data.experience.filter((e) => e.id !== id);
+        renderExp();
+        saveToLocal();
+      }
+
+      function addSkillCategory() {
+        const catSelect = document.getElementById("skillCatSelect").value;
+        const catNew = document.getElementById("skillCatNew").value.trim();
+        const category = catNew || catSelect;
+        const itemsText = document.getElementById("skillItems").value;
+        const items = itemsText
+          .split(",")
+          .map((s) => s.trim())
+          .filter((s) => s);
+
+        if (!category || items.length === 0) {
+          alert("Isi kategori dan minimal 1 teknologi!");
+          return;
+        }
+
+        const existing = data.skills.find((s) => s.category === category);
+        if (existing) {
+          existing.items = [...new Set([...existing.items, ...items])];
+        } else {
+          data.skills.push({ category, items });
+          if (!data.categories.includes(category)) {
+            data.categories.push(category);
+          }
+        }
+
+        document.getElementById("skillCatNew").value = "";
+        document.getElementById("skillItems").value = "";
+        renderSkills();
+        updateCatSelects();
+        saveToLocal();
+      }
+      function renderSkills() {
+        const list = document.getElementById("skillsList");
+        list.innerHTML = data.skills
+          .map(
+            (s, idx) => `
+                <div style="margin-bottom: 12px; border: 2px solid var(--win-border-darker); border-right-color: var(--win-border-light); border-bottom-color: var(--win-border-light);">
+                    <div style="background: linear-gradient(180deg, #D6DFF7 0%, #7A96DF 100%); color: white; padding: 6px 10px; font-weight: bold; font-size: 12px; display: flex; justify-content: space-between; align-items: center;">
+                        <span>⚡ ${s.category}</span>
+                        <button onclick="deleteSkillCat(${idx})" style="background: none; border: none; color: white; cursor: pointer; font-weight: bold;">×</button>
+                    </div>
+                    <div style="padding: 10px; display: flex; flex-wrap: wrap; gap: 6px;">
+                        ${s.items
+                          .map(
+                            (item, i) => `
+                            <span class="cat-tag">${item} <button onclick="deleteSkillItem(${idx}, ${i})">×</button></span>
+                        `,
+                          )
+                          .join("")}
+                    </div>
+                </div>
+            `,
+          )
+          .join("");
+      }
+      function deleteSkillCat(idx) {
+        data.skills.splice(idx, 1);
+        renderSkills();
+        saveToLocal();
+      }
+      function deleteSkillItem(catIdx, itemIdx) {
+        data.skills[catIdx].items.splice(itemIdx, 1);
+        if (data.skills[catIdx].items.length === 0) {
+          data.skills.splice(catIdx, 1);
+        }
+        renderSkills();
+        saveToLocal();
+      }
+
+      function addCategory() {
+        const cat = document.getElementById("newCat").value.trim();
+        if (cat && !data.categories.includes(cat)) {
+          data.categories.push(cat);
+          document.getElementById("newCat").value = "";
+          renderCats();
+          updateCatSelects();
+          saveToLocal();
+        }
+      }
+      function renderCats() {
+        const list = document.getElementById("catList");
+        list.innerHTML = data.categories
+          .map(
+            (c) => `
+                <span class="cat-tag">${c} <button onclick="deleteCat('${c}')">×</button></span>
+            `,
+          )
+          .join("");
+      }
+      function deleteCat(cat) {
+        if (confirm('Hapus kategori "' + cat + '"?')) {
+          data.categories = data.categories.filter((c) => c !== cat);
+          renderCats();
+          updateCatSelects();
+          saveToLocal();
+        }
+      }
+      function updateCatSelects() {
+        const opts = data.categories
+          .map((c) => `<option value="${c}">${c}</option>`)
+          .join("");
+        document.getElementById("projCat").innerHTML = opts;
+        document.getElementById("skillCatSelect").innerHTML = opts;
+      }
+
+      function addProject() {
+        const item = {
+          id: nextId.projects++,
+          title: document.getElementById("projTitle").value,
+          category: document.getElementById("projCat").value,
+          description: document.getElementById("projDesc").value,
+          pdf: tempPdf.project || "",
+          thumbnail: document.getElementById("projThumb").value,
+        };
+        data.projects.push(item);
+        document.getElementById("projTitle").value = "";
+        document.getElementById("projDesc").value = "";
+        document.getElementById("projThumb").value = "";
+        tempPdf.project = null;
+        document.getElementById("projPdfInfo").textContent = "";
+        renderProjects();
+        saveToLocal();
+      }
+      function renderProjects() {
+        const tbody = document.querySelector("#projTable tbody");
+        tbody.innerHTML = data.projects
+          .map(
+            (p) => `
+                <tr><td>${p.title}</td><td>${p.category}</td><td>${p.thumbnail ? "✅" : "❌"}</td><td>${p.pdf ? "✅" : "❌"}</td>
+                <td><button class="win-button danger" onclick="deleteProj(${p.id})">🗑️</button></td></tr>
+            `,
+          )
+          .join("");
+      }
+      function deleteProj(id) {
+        data.projects = data.projects.filter((p) => p.id !== id);
+        renderProjects();
+        saveToLocal();
+      }
+
+      function addCertificate() {
+        const item = {
+          id: nextId.certificates++,
+          name: document.getElementById("certName").value,
+          issuer: document.getElementById("certIssuer").value,
+          year: document.getElementById("certYear").value,
+          pdf: tempPdf.certificate || "",
+        };
+        data.certificates.push(item);
+        document.getElementById("certName").value = "";
+        document.getElementById("certIssuer").value = "";
+        document.getElementById("certYear").value = "";
+        tempPdf.certificate = null;
+        document.getElementById("certPdfInfo").textContent = "";
+        renderCerts();
+        saveToLocal();
+      }
+      function renderCerts() {
+        const tbody = document.querySelector("#certTable tbody");
+        tbody.innerHTML = data.certificates
+          .map(
+            (c) => `
+                <tr><td>${c.name}</td><td>${c.issuer}</td><td>${c.year}</td><td>${c.pdf ? "✅" : "❌"}</td>
+                <td><button class="win-button danger" onclick="deleteCert(${c.id})">🗑️</button></td></tr>
+            `,
+          )
+          .join("");
+      }
+      function deleteCert(id) {
+        data.certificates = data.certificates.filter((c) => c.id !== id);
+        renderCerts();
+        saveToLocal();
+      }
+
+      function loadContact() {
+        document.getElementById("conEmail").value = data.contact.email;
+        document.getElementById("conPhone").value = data.contact.phone;
+        document.getElementById("conLinked").value = data.contact.linkedin;
+        document.getElementById("conGit").value = data.contact.github;
+        document.getElementById("conLoc").value = data.contact.location;
+      }
+      function saveContact() {
+        data.contact = {
+          email: document.getElementById("conEmail").value,
+          phone: document.getElementById("conPhone").value,
+          linkedin: document.getElementById("conLinked").value,
+          github: document.getElementById("conGit").value,
+          location: document.getElementById("conLoc").value,
+        };
+        saveToLocal();
+        alert("Kontak disimpan!");
+      }
+
+      function setupUpload(areaId, inputId, infoId, type) {
+        const area = document.getElementById(areaId);
+        const input = document.getElementById(inputId);
+        area.addEventListener("click", () => input.click());
+        area.addEventListener("dragover", (e) => {
+          e.preventDefault();
+          area.style.borderColor = "var(--win-highlight)";
+        });
+        area.addEventListener(
+          "dragleave",
+          () => (area.style.borderColor = "var(--win-border-dark)"),
+        );
+        area.addEventListener("drop", (e) => {
+          e.preventDefault();
+          area.style.borderColor = "var(--win-border-dark)";
+          const files = Array.from(e.dataTransfer.files).filter(
+            (f) => f.type === "application/pdf",
+          );
+          if (files.length) handlePdf(files[0], type, infoId);
+        });
+        input.addEventListener("change", (e) => {
+          if (e.target.files.length) handlePdf(e.target.files[0], type, infoId);
+        });
+      }
+
+      function handlePdf(file, type, infoId) {
+        const filename = "uploads/" + file.name.replace(/\s+/g, "_");
+        tempPdf[type] = filename;
+        const url = URL.createObjectURL(file);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = file.name;
+        a.style.display = "block";
+        a.style.marginTop = "8px";
+        a.className = "win-button primary";
+        a.innerHTML =
+          "⬇️ Download " + file.name + " (simpan ke folder uploads/)";
+        const info = document.getElementById(infoId);
+        info.innerHTML = `<div>📄 ${file.name} (${(file.size / 1024).toFixed(1)} KB)</div>`;
+        info.appendChild(a);
+      }
+
+      setupUpload("projUpload", "projPdfInput", "projPdfInfo", "project");
+      setupUpload("certUpload", "certPdfInput", "certPdfInfo", "certificate");
+
+      function saveToLocal() {
+        localStorage.setItem("portfolioData", JSON.stringify(data));
+      }
+      function loadFromLocal() {
+        const saved = localStorage.getItem("portfolioData");
+        if (saved) {
+          data = JSON.parse(saved);
+          updateNextIds();
+          refreshAll();
+          alert("Data dimuat dari LocalStorage!");
+        } else {
+          alert("Tidak ada data di LocalStorage!");
+        }
+      }
+      function exportJSON() {
+        const blob = new Blob([JSON.stringify(data, null, 2)], {
+          type: "application/json",
+        });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "data.json";
+        a.click();
+        URL.revokeObjectURL(url);
+        alert(
+          "data.json telah di-download. Simpan di folder yang sama dengan index.html",
+        );
+      }
+      function importJSON(input) {
+        const file = input.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          try {
+            data = JSON.parse(e.target.result);
+            updateNextIds();
+            refreshAll();
+            saveToLocal();
+            alert("Data berhasil diimport!");
+          } catch (err) {
+            alert("Gagal import: " + err.message);
+          }
+        };
+        reader.readAsText(file);
+      }
+
+      function updateClock() {
+        const now = new Date();
+        const h = String(now.getHours()).padStart(2, "0");
+        const m = String(now.getMinutes()).padStart(2, "0");
+        document.getElementById("clock").textContent = `${h}:${m}`;
+      }
+      updateClock();
+      setInterval(updateClock, 1000);
+
+      document.addEventListener("keydown", (e) => {
+        if ((e.ctrlKey || e.metaKey) && (e.key === "p" || e.key === "s")) {
+          e.preventDefault();
+          return false;
+        }
+      });
+      document.addEventListener("contextmenu", (e) => e.preventDefault());
+    </script>
+  </body>
+</html>

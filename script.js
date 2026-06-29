@@ -1,3 +1,4 @@
+const isFileProtocol = window.location.protocol === "file:";
 // ========== SECRET MESSAGE CONFIG ==========
 const GOOGLE_SCRIPT_URL =
   "https://script.google.com/macros/s/AKfycbzL47_nNe0g2zt7PMVo4Yfd3a9HM9iScz9UDLJrpdby5zm3Jg2nq5vghsVDH7JTAHRi-A/exec";
@@ -95,6 +96,30 @@ let portfolioData = null;
 let currentFilter = "All";
 
 async function loadData() {
+  const isFileProtocol = window.location.protocol === "file:";
+
+  // 1. SELALU COBA FETCH DATA.JSON TERLEBIH DAHULU
+  if (!isFileProtocol) {
+    try {
+      const response = await fetch("data.json?_=" + Date.now(), {
+        cache: "no-store", // ← paksa ambil data baru, jangan pakai cache
+      });
+
+      if (response.ok) {
+        portfolioData = await response.json();
+
+        // Optional: update localStorage sebagai backup offline
+        // localStorage.setItem("portfolioData", JSON.stringify(portfolioData));
+
+        renderAll();
+        return;
+      }
+    } catch (err) {
+      console.log("Fetch gagal:", err);
+    }
+  }
+
+  // 2. Fallback ke localStorage kalau fetch benar-benar gagal
   const saved = localStorage.getItem("portfolioData");
   if (saved) {
     try {
@@ -106,21 +131,7 @@ async function loadData() {
     }
   }
 
-  if (!isFileProtocol) {
-    try {
-      const response = await fetch("data.json?_=" + Date.now());
-      if (response.ok) {
-        portfolioData = await response.json();
-        renderAll();
-
-        return;
-      }
-    } catch (err) {
-      console.log("Fetch gagal:", err);
-    }
-  }
-
-  // Fallback: pakai data embed
+  // 3. Fallback terakhir
   portfolioData = EMBED_DATA;
   renderAll();
 }
@@ -177,9 +188,21 @@ function renderAll() {
 
     attachProjectListeners();
     attachSecretFormListeners();
+
+    initGallery();
   } catch (err) {
     console.error("Render error:", err);
     container.innerHTML = `<div class="error-box">❌ Gagal merender data: ${escapeHtml(err.message)}</div>`;
+  }
+}
+
+function initGallery() {
+  const btnGrid = document.getElementById("btnGrid");
+  if (btnGrid) btnGrid.classList.add("active");
+
+  // Pastikan loadGallery dipanggil setelah DOM galeri tersedia
+  if (document.getElementById("galleryLoading")) {
+    loadGallery();
   }
 }
 
@@ -526,8 +549,7 @@ function renderSecretMessage() {
 
 function renderGaleri() {
   return `
-  <div class="win-window">
-      <!-- Title Bar -->
+  <div class="win-window" id="galeri">
       <div class="win-titlebar">
         <div class="title-bar-left">
           <div class="window-icon">📷</div>
@@ -542,7 +564,6 @@ function renderGaleri() {
         </div>
       </div>
 
-      <!-- Toolbar -->
       <div class="toolbar">
         <button class="toolbar-btn" onclick="shufflePhotos()">🔀 Acak</button>
         <div class="toolbar-separator"></div>
@@ -554,7 +575,6 @@ function renderGaleri() {
         </button>
       </div>
 
-      <!-- Address Bar -->
       <div class="address-bar">
         <span class="address-label">Alamat</span>
         <div class="address-input">
@@ -563,7 +583,6 @@ function renderGaleri() {
         </div>
       </div>
 
-      <!-- Content -->
       <div class="content">
         <div class="section-title">
           <span style="font-size: 18px">🖼️</span>
@@ -573,13 +592,13 @@ function renderGaleri() {
         <div class="json-info" style="display: none">
           📄 Membaca dari: <code>galeri.json</code> | 🖼️ Folder:
           <code>./galeri/</code>
-          <span id="jsonStatus" style="float: right; color: #008000"
+          <span id="galleryJsonStatus" style="float: right; color: #008000"
             >⏳ Memuat...</span
           >
         </div>
 
         <!-- Loading State -->
-        <div id="loading" class="loading-container">
+        <div id="galleryLoading" class="loading-container">
           <div class="loading-text">
             <span class="hourglass">⏳</span>
             <span>Memuat galeri...</span>
@@ -588,18 +607,18 @@ function renderGaleri() {
         </div>
 
         <!-- Gallery -->
-        <div id="gallery" class="gallery-grid" style="display: none"></div>
+        <div id="galleryGrid" class="gallery-grid" style="display: none"></div>
       </div>
 
       <!-- Status Bar -->
       <div class="status-bar">
         <div class="status-bar-left">
-          <span id="status-count">0 objek</span>
+          <span id="galleryStatusCount">0 objek</span>
           <div class="status-separator"></div>
-          <span id="status-size">0 KB</span>
+          <span id="galleryStatusSize">0 KB</span>
         </div>
         <div class="status-bar-right">
-          <span id="status-view">Tampilan: Ikon</span>
+          <span id="galleryStatusView">Tampilan: Ikon</span>
         </div>
       </div>
     </div>
@@ -758,49 +777,70 @@ let currentView = "grid";
 
 // ===== LOAD GALLERY DARI JSON =====
 async function loadGallery() {
-  const loadingEl = document.getElementById("loading");
-  const galleryEl = document.getElementById("gallery");
-  const statusEl = document.getElementById("jsonStatus");
+  const loadingEl = document.getElementById("galleryLoading");
+  const galleryEl = document.getElementById("galleryGrid");
+  const statusEl = document.getElementById("galleryJsonStatus");
 
-  loadingEl.style.display = "flex";
-  galleryEl.style.display = "none";
-  statusEl.textContent = "⏳ Memuat...";
-  statusEl.style.color = "#008000";
+  if (loadingEl) loadingEl.style.display = "flex";
+  if (galleryEl) galleryEl.style.display = "none";
+  if (statusEl) {
+    statusEl.textContent = "⏳ Memuat...";
+    statusEl.style.color = "#008000";
+  }
 
   try {
-    const response = await fetch("./galeri.json?t=" + Date.now());
-    if (!response.ok) throw new Error("galeri.json tidak ditemukan");
+    const response = await fetch("./galeri.json?t=" + Date.now(), {
+      cache: "no-store",
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: galeri.json tidak ditemukan`);
+    }
 
     photos = await response.json();
 
-    statusEl.textContent = "✓ Terhubung (" + photos.length + " foto)";
-    statusEl.style.color = "#008000";
+    // Validasi wajib array
+    if (!Array.isArray(photos)) {
+      throw new Error("Format galeri.json salah: harus berupa array");
+    }
+
+    if (statusEl) {
+      statusEl.textContent = "✓ Terhubung (" + photos.length + " foto)";
+      statusEl.style.color = "#008000";
+    }
   } catch (err) {
-    console.error("Gagal memuat galeri.json:", err);
-    statusEl.textContent = "✗ " + err.message;
-    statusEl.style.color = "#c0392b";
-    photos = [];
+    console.error("Galeri error:", err);
+    if (statusEl) {
+      statusEl.textContent = "✗ " + err.message;
+      statusEl.style.color = "#c0392b";
+    }
+    photos = []; // fallback array kosong
   }
 
-  setTimeout(() => {
-    renderGallery();
-    loadingEl.style.display = "none";
+  // Render & tampilkan (tanpa setTimeout delay)
+  renderGallery();
+  if (loadingEl) loadingEl.style.display = "none";
+  if (galleryEl) {
     galleryEl.style.display = currentView === "grid" ? "grid" : "flex";
-    updateStatus();
-  }, 600);
+  }
+  updateStatus();
 }
 
 // ===== RENDER GALLERY =====
 function renderGallery() {
-  const galleryEl = document.getElementById("gallery");
+  const galleryEl = document.getElementById("galleryGrid");
+  if (!galleryEl) return;
+
   galleryEl.innerHTML = "";
 
-  if (photos.length === 0) {
+  if (!Array.isArray(photos) || photos.length === 0) {
     galleryEl.innerHTML = `
-      <div class="empty-state" style="grid-column: 1/-1;">
+      <div class="empty-state" style="grid-column: 1/-1; text-align:center; padding:40px;">
         <span style="font-size: 32px;">📂</span>
-        <p>Folder galeri kosong</p>
-        <p>Edit <code>galeri.json</code> untuk menambah foto</p>
+        <p style="color: var(--win-text-muted);">Folder galeri kosong atau gagal dimuat</p>
+        <p style="font-size: 12px; color: var(--win-text-muted);">
+          Pastikan file <code>galeri.json</code> ada di folder yang sama.
+        </p>
       </div>
     `;
     return;
@@ -815,11 +855,11 @@ function renderGallery() {
 
       item.innerHTML = `
         <div class="photo-frame">
-          <img src="${photo.url}" alt="${photo.caption}"
-               onerror="this.onerror=null; this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22300%22><rect fill=%22%23ddd%22 width=%22400%22 height=%22300%22/><text x=%2250%%22 y=%2250%%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%23999%22 font-size=%2214%22>${photo.caption}</text></svg>'"
+          <img src="${photo.url}" alt="${photo.caption || ""}"
+               onerror="this.onerror=null; this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22300%22><rect fill=%22%23ddd%22 width=%22400%22 height=%22300%22/><text x=%2250%%22 y=%2250%%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%23999%22 font-size=%2214%22>${photo.caption || "No Image"}</text></svg>'"
                loading="lazy">
         </div>
-        <div class="photo-caption">${photo.caption}</div>
+        <div class="photo-caption">${photo.caption || "Untitled"}</div>
       `;
       galleryEl.appendChild(item);
     });
@@ -830,9 +870,9 @@ function renderGallery() {
       item.className = "list-item";
       item.onclick = () => openLightbox(index);
       item.innerHTML = `
-        <img src="${photo.url}" alt="${photo.caption}"
+        <img src="${photo.url}" alt="${photo.caption || ""}"
              onerror="this.onerror=null; this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2240%22 height=%2230%22><rect fill=%22%23ddd%22 width=%2240%22 height=%2230%22/></svg>'">
-        <span>${photo.caption}</span>
+        <span>${photo.caption || "Untitled"}</span>
         <span style="margin-left:auto; color:#808080; font-size:11px;">Foto</span>
       `;
       galleryEl.appendChild(item);
@@ -874,13 +914,24 @@ function viewMode(mode) {
 
 // ===== STATUS BAR =====
 function updateStatus() {
-  document.getElementById("status-count").textContent =
-    photos.length + " objek";
-  const totalSize = photos.length * 245;
-  document.getElementById("status-size").textContent =
-    totalSize > 1024
-      ? (totalSize / 1024).toFixed(1) + " MB"
-      : totalSize + " KB";
+  const countEl = document.getElementById("galleryStatusCount");
+  const sizeEl = document.getElementById("galleryStatusSize");
+  const viewEl = document.getElementById("galleryStatusView");
+
+  if (countEl) countEl.textContent = photos.length + " objek";
+
+  if (sizeEl) {
+    const totalSize = photos.length * 245;
+    sizeEl.textContent =
+      totalSize > 1024
+        ? (totalSize / 1024).toFixed(1) + " MB"
+        : totalSize + " KB";
+  }
+
+  if (viewEl) {
+    viewEl.textContent =
+      currentView === "grid" ? "Tampilan: Ikon" : "Tampilan: Daftar";
+  }
 }
 
 // ===== LIGHTBOX =====
@@ -921,6 +972,16 @@ document.addEventListener("keydown", (e) => {
 
 // ===== INIT =====
 window.onload = () => {
-  document.getElementById("btnGrid").classList.add("active");
-  loadGallery();
+  const btnGrid = document.getElementById("btnGrid");
+  if (btnGrid) {
+    btnGrid.classList.add("active");
+  } else {
+    console.warn("btnGrid belum tersedia, inisialisasi galeri ditunda");
+  }
+
+  // Panggil loadGallery dengan delay kecil untuk pastikan DOM siap
+  // atau panggil langsung kalau elemen sudah ada
+  if (document.getElementById("galleryLoading")) {
+    loadGallery();
+  }
 };

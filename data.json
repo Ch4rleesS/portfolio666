@@ -2,7 +2,7 @@
   "profile": {
     "name": "Gofar Chairulloh Annam",
     "title": "Technician & Automation Engineering",
-    "photo": "",
+    "photo": "/galeri/foto1.png",
     "bio": "IoT Developer, Electrical, Automation, Networking, Industrial Digitalization & Smart Factory enthusiast",
     "about": "A Technician & Automation Engineer specializing in the maintenance, automation, and digitization of industrial dairy processing machinery (MilkLife). Combines expertise in mechanical and electrical systems, PLC programming, and network infrastructure to drive production efficiency.\n\nKey Skills & Experience:\n\nMaintenance & Troubleshooting: Ensuring the reliability of machinery in the processing (IWAI), filling (IPI, Tetra Pak), and packing (Leap Machinery, Tetra Pak) areas to guarantee smooth operations and minimize downtime.\n\nDigitalization & Data Analysis: Developed digital dashboards for production data visualization, including automated breakdown logging and OEE (Equipment & Line) calculations based on PLC tag data.\n\nIndustrial Automation: Experienced in modifying PLC program logic and integrating new machines into existing sequences.\n\nNetwork Infrastructure & IoT: Proficient in industrial network configuration (VLAN, trunking, VPN, fiber optics), and actively developing expertise in Web Development, Electronics, and IoT to support Industry 4.0 implementation."
   },
@@ -28,29 +28,15 @@
   "skills": [
     {
       "category": "Programming",
-      "items": [
-        "Node.js",
-        "HTML",
-        "CSS",
-        "JS",
-        "python"
-      ]
+      "items": ["Node.js", "HTML", "CSS", "JS", "python"]
     },
     {
       "category": "Automation",
-      "items": [
-        "GX Works2",
-        "GT Designer",
-        "CX Programmer"
-      ]
+      "items": ["GX Works2", "GT Designer", "CX Programmer"]
     },
     {
       "category": "IOT",
-      "items": [
-        "Arduino IDE",
-        "VS Code",
-        "KiCad"
-      ]
+      "items": ["Arduino IDE", "VS Code", "KiCad"]
     }
   ],
   "categories": [

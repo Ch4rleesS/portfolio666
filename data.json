@@ -1,18 +1,18 @@
 {
   "profile": {
-    "name": "Nama Lengkap Anda",
-    "title": "Full Stack Developer & Automation Engineer",
+    "name": "Gofar Chairulloh Annam",
+    "title": "Technician & Automation Engineering",
     "photo": "",
-    "bio": "Deskripsi singkat tentang diri Anda.",
-    "about": "Tulis tentang diri Anda secara detail di sini."
+    "bio": "IoT Developer, Electrical, Automation, Networking, Industrial Digitalization & Smart Factory enthusiast",
+    "about": "A Technician & Automation Engineer specializing in the maintenance, automation, and digitization of industrial dairy processing machinery (MilkLife). Combines expertise in mechanical and electrical systems, PLC programming, and network infrastructure to drive production efficiency.\n\nKey Skills & Experience:\n\nMaintenance & Troubleshooting: Ensuring the reliability of machinery in the processing (IWAI), filling (IPI, Tetra Pak), and packing (Leap Machinery, Tetra Pak) areas to guarantee smooth operations and minimize downtime.\n\nDigitalization & Data Analysis: Developed digital dashboards for production data visualization, including automated breakdown logging and OEE (Equipment & Line) calculations based on PLC tag data.\n\nIndustrial Automation: Experienced in modifying PLC program logic and integrating new machines into existing sequences.\n\nNetwork Infrastructure & IoT: Proficient in industrial network configuration (VLAN, trunking, VPN, fiber optics), and actively developing expertise in Web Development, Electronics, and IoT to support Industry 4.0 implementation."
   },
   "education": [
     {
       "id": 1,
-      "institution": "Universitas Indonesia",
-      "degree": "S1 Teknik Informatika",
-      "year": "2018 - 2022",
-      "description": "Fokus pada pengembangan perangkat lunak dan sistem otomasi."
+      "institution": "Politeknik Negeri Jakarta",
+      "degree": "Teknik Elektro 3.35 / 4.0",
+      "year": "2021 2024",
+      "description": "Web Programming (HTML, CSS, JavaScript)\nEmbedded Programming (C/C++, Python)\nNetworking (IP Addressing, Subnetting, VLAN, Trunking, OSI Layer)\nRadio Frequency (RF), Radar, dan Teknologi Seluler 3G/4G/5G\nFiber Optic Technology\nAntenna Design dan Analisis VSWR\nInternet of Things (IoT) dan Sistem Mikrokontroler\nIntegrasi Hardware dan Software pada Sistem Elektronika dan Telekomunikasi."
     }
   ],
   "experience": [
@@ -28,15 +28,29 @@
   "skills": [
     {
       "category": "Programming",
-      "items": ["Node.js", "HTML", "CSS", "JS", "python"]
+      "items": [
+        "Node.js",
+        "HTML",
+        "CSS",
+        "JS",
+        "python"
+      ]
     },
     {
       "category": "Automation",
-      "items": ["GX Works2", "GT Designer", "CX Programmer"]
+      "items": [
+        "GX Works2",
+        "GT Designer",
+        "CX Programmer"
+      ]
     },
     {
       "category": "IOT",
-      "items": ["Arduino IDE", "VS Code", "KiCad"]
+      "items": [
+        "Arduino IDE",
+        "VS Code",
+        "KiCad"
+      ]
     }
   ],
   "categories": [
@@ -83,10 +97,10 @@
     }
   ],
   "contact": {
-    "email": "email@example.com",
-    "phone": "+62 812-3456-7890",
-    "linkedin": "linkedin.com/in/username",
-    "github": "github.com/username",
-    "location": "Jakarta, Indonesia"
+    "email": "Gofar6195@gmail.com",
+    "phone": "",
+    "linkedin": "https://www.linkedin.com/in/gofar-chairulloh-annam666/",
+    "github": "",
+    "location": "Bekasi, Indonesia"
   }
 }

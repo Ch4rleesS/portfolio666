@@ -10,25 +10,35 @@
     {
       "id": 1,
       "institution": "Politeknik Negeri Jakarta",
-      "degree": "Teknik Elektro 3.35 / 4.0",
+      "degree": "D3 in Electrical Engineering, Major in Telecommunications  | GPA : 3.35 / 4.00",
       "year": "2021 2024",
-      "description": "Web Programming (HTML, CSS, JavaScript)\nEmbedded Programming (C/C++, Python)\nNetworking (IP Addressing, Subnetting, VLAN, Trunking, OSI Layer)\nRadio Frequency (RF), Radar, dan Teknologi Seluler 3G/4G/5G\nFiber Optic Technology\nAntenna Design dan Analisis VSWR\nInternet of Things (IoT) dan Sistem Mikrokontroler\nIntegrasi Hardware dan Software pada Sistem Elektronika dan Telekomunikasi."
+      "description": "• RF, Radar, and Cellular Networks (3G/4G/5G)\n• Computer Networking (IP, Subnetting, VLAN, Trunking, OSI Model)\n• Fiber Optics\n• Antenna Design & VSWR Analysis\n• IoT and ESP32 Development\n• Web Development (HTML, CSS, JavaScript)\n• Embedded Systems Programming (C/C++, Python)\n"
     }
   ],
   "experience": [
     {
       "id": 1,
-      "company": "PT Teknologi Nusantara",
-      "position": "Senior Developer",
-      "year": "2022 - Sekarang",
-      "description": "Mengembangkan aplikasi web dan sistem otomasi perusahaan.",
-      "image": "uploads/exp1.jpg"
+      "company": "PT Global Dairi Alami (MilkLife)",
+      "position": "Technician & Automation Engineering",
+      "year": "May 2025 - Now",
+      "description": "• Performed preventive and corrective maintenance on dairy processing machinery, including IWAI, IPI, Tetra Pak, and Leap Machinery equipment.\n• Conducted preventive electrical maintenance on production machines and electrical control panels to ensure reliable operation and minimize downtime.\n• Ensured machine reliability through troubleshooting and continuous improvement activities.\n• Modified PLC program logic and integrated new machines into existing production sequences.\n• Developed digital dashboards for production monitoring, automated breakdown logging, and OEE calculations based on PLC tag data.\n• Configured and maintained industrial network infrastructure, including VLANs, trunking, VPNs, and fiber optic systems.\n• Collaborated with production and engineering teams to improve efficiency and support Industry 4.0 initiatives.",
+      "image": "uploads/gofar.png"
     }
   ],
   "skills": [
     {
       "category": "Programming",
-      "items": ["Node.js", "HTML", "CSS", "JS", "python"]
+      "items": [
+        "HTML",
+        "CSS",
+        "Java Script",
+        "Node.js",
+        "Python",
+        "Angular",
+        "Tailwind CSS",
+        "PHP",
+        "C++"
+      ]
     },
     {
       "category": "Automation",
@@ -36,7 +46,15 @@
     },
     {
       "category": "IOT",
-      "items": ["Arduino IDE", "VS Code", "KiCad"]
+      "items": [
+        "Arduino IDE",
+        "VS Code",
+        "KiCad",
+        "XAMPP",
+        "MYSQL WorkBench",
+        "Keepware OPC UA Server",
+        "FluidSIM"
+      ]
     }
   ],
   "categories": [
@@ -44,21 +62,21 @@
     "Automation",
     "IOT",
     "Mechanical",
-    "Other",
-    "mekanik"
+    "Networking",
+    "Other"
   ],
   "projects": [
     {
       "id": 1,
-      "title": "Sistem Monitoring IoT",
+      "title": "TEST1",
       "category": "IOT",
-      "description": "Monitoring suhu dan kelembaban real-time menggunakan ESP32.",
+      "description": "Monitoring tingkat stress",
       "pdf": "uploads/iot-project.pdf",
       "thumbnail": "uploads/proj1.jpg"
     },
     {
       "id": 2,
-      "title": "hg",
+      "title": "TEST2",
       "category": "Programming",
       "description": "gofar",
       "pdf": "uploads/HG111_New_Homogenizer.pdf",
@@ -66,7 +84,7 @@
     },
     {
       "id": 3,
-      "title": "hg2",
+      "title": "TEST3",
       "category": "Programming",
       "description": "gofar",
       "pdf": "uploads/HG111_New_Homogenizer.pdf",
@@ -76,9 +94,30 @@
   "certificates": [
     {
       "id": 1,
-      "name": "AWS Certified Developer",
-      "issuer": "Amazon Web Services",
-      "year": "2023",
+      "name": "3rd Competition Karya Cipta Teknologi",
+      "issuer": "Universitas Udayana",
+      "year": "2024",
+      "pdf": "uploads/sertif2.pdf"
+    },
+    {
+      "id": 2,
+      "name": "Finalis competition National innovation week competition 2.0",
+      "issuer": "Universitas Gontor",
+      "year": "2024",
+      "pdf": "uploads/sertif3.pdf"
+    },
+    {
+      "id": 3,
+      "name": "BNSP Internet of Things Application engineering ( floatway systems )",
+      "issuer": "Politeknik Negeri Jakarta",
+      "year": "2024",
+      "pdf": "uploads/sertif1.pdf"
+    },
+    {
+      "id": 4,
+      "name": "Ide terbanyak Continuous Improvement & Awad (CIA) - Savoria",
+      "issuer": "PT Global Dairi Alami",
+      "year": "2025",
       "pdf": "uploads/aws-cert.pdf"
     }
   ],

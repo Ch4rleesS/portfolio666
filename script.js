@@ -23,12 +23,12 @@ function submitSecret(e) {
   const submitBtn = e.target.querySelector('button[type="submit"]');
 
   if (!username || !message) {
-    showSecretStatus("Semua kolom wajib diisi!", "error");
+    showSecretStatus("Please fill in all required fields!", "error");
     return false;
   }
 
   submitBtn.disabled = true;
-  submitBtn.textContent = "Mengirim...";
+  submitBtn.textContent = "Please wait, sending your message...";
   submitBtn.style.opacity = "0.7";
 
   // ✅ PERBAIKAN: Hapus 'Content-Type: application/json' karena tidak kompatibel dengan mode: 'no-cors'
@@ -56,16 +56,16 @@ function submitSecret(e) {
     .then(() => {
       // Catatan: dengan mode 'no-cors', response tidak bisa dibaca (opaque response)
       // Tapi request akan tetap terkirim ke Google Apps Script
-      showSecretStatus("✅ Pesan berhasil dikirim!", "success");
+      showSecretStatus("✅ Message sent successfully!", "success");
       document.getElementById("secretForm").reset();
     })
     .catch((err) => {
       console.error("Submit error:", err);
-      showSecretStatus("❌ Gagal mengirim pesan. Coba lagi.", "error");
+      showSecretStatus("❌ Failed to send message.", "error");
     })
     .finally(() => {
       submitBtn.disabled = false;
-      submitBtn.textContent = "Kirim";
+      submitBtn.textContent = "Send";
       submitBtn.style.opacity = "1";
     });
 
@@ -140,7 +140,7 @@ async function loadData() {
 const loadingEl = document.getElementById("loading");
 if (loadingEl) {
   loadingEl.innerHTML = `
-        <div style="text-align:center;padding:40px;">
+        <div style="text-align:center;padding:40px; display:none;">
           <div style="font-size:48px;margin-bottom:16px;">📂</div>
           <h3 style="color:var(--win-blue);margin-bottom:12px;">data.json tidak ditemukan</h3>
           <p style="color:var(--win-text-muted);font-size:13px;margin-bottom:16px;">
@@ -211,7 +211,7 @@ function renderHero() {
   return `
     <div class="win-window" id="beranda">
       <div class="win-titlebar">
-        <div class="win-title"><div class="win-title-icon"></div><span>Portfolio.exe - Beranda</span></div>
+        <div class="win-title"><div class="win-title-icon"></div><span>Portfolio.exe</span></div>
         <div class="win-buttons"><div class="win-btn">_</div><div class="win-btn">□</div><div class="win-btn close">×</div></div>
       </div>
       <div class="win-content" style="text-align: center; padding: 60px 20px;">
@@ -222,7 +222,7 @@ function renderHero() {
         <p style="color: var(--win-text-muted); font-size: 14px; margin-bottom: 16px;">${escapeHtml(p.title || "")}</p>
         <p style="font-size: 13px; max-width: 600px; margin: 0 auto;">${escapeHtml(p.bio || "")}</p>
         <div style="margin-top: 24px;">
-          <button class="win-button primary" onclick="document.getElementById('proyek').scrollIntoView({behavior:'smooth'})">📂 Lihat Proyek</button>
+          <button class="win-button primary" onclick="document.getElementById('proyek').scrollIntoView({behavior:'smooth'})">📂 View Project</button>
         </div>
       </div>
     </div>`;
@@ -231,13 +231,13 @@ function renderHero() {
 function renderAbout() {
   const p = portfolioData.profile || {};
   return `
-    <div class="win-window" id="tentang">
+    <div class="win-window" id="about">
       <div class="win-titlebar">
-        <div class="win-title"><div class="win-title-icon" style="background: linear-gradient(135deg, #87CEEB, #4682B4); border-color: #4682B4;"></div><span>TentangSaya.exe</span></div>
+        <div class="win-title"><div class="win-title-icon" style="background: linear-gradient(135deg, #87CEEB, #4682B4); border-color: #4682B4;"></div><span>AboutMe.exe</span></div>
         <div class="win-buttons"><div class="win-btn">_</div><div class="win-btn">□</div><div class="win-btn close">×</div></div>
       </div>
       <div class="win-content">
-        <div class="section-title">👤 Tentang Saya</div>
+        <div class="section-title">👤 About</div>
         <p style="font-size: 13px; line-height: 1.7; white-space: pre-line;">${escapeHtml(p.about || "")}</p>
       </div>
     </div>`;
@@ -253,19 +253,19 @@ function renderEducation() {
           <div class="info-card-body">
             <div style="font-weight: bold; margin-bottom: 4px; ">${escapeHtml(edu.degree || "")}</div>
             <div style="color: var(--win-text-muted); font-size: 11px; margin-bottom: 6px;">📅 ${escapeHtml(edu.year || "")}</div>
-            <div style="white-space: pre-line;">${escapeHtml(edu.description || "")}</div>
+            <div style="white-space: pre-line; line-height: 1.8">${escapeHtml(edu.description || "")}</div>
           </div>
         </div>`,
     )
     .join("");
   return `
-    <div class="win-window" id="pendidikan">
+    <div class="win-window" id="education">
       <div class="win-titlebar">
-        <div class="win-title"><div class="win-title-icon" style="background: linear-gradient(135deg, #DDA0DD, #8B008B); border-color: #8B008B;"></div><span>Pendidikan.exe</span></div>
+        <div class="win-title"><div class="win-title-icon" style="background: linear-gradient(135deg, #DDA0DD, #8B008B); border-color: #8B008B;"></div><span>Education.exe</span></div>
         <div class="win-buttons"><div class="win-btn">_</div><div class="win-btn">□</div><div class="win-btn close">×</div></div>
       </div>
       <div class="win-content">
-        <div class="section-title">🎓 Latar Belakang Pendidikan</div>
+        <div class="section-title">🎓 Educational Background</div>
         <div class="info-grid">${items}</div>
       </div>
     </div>`;
@@ -281,19 +281,19 @@ function renderExperience() {
           <div class="info-card-body">
             <div style="font-weight: bold; margin-bottom: 4px;">${escapeHtml(exp.position || "")}</div>
             <div style="color: var(--win-text-muted); font-size: 11px; margin-bottom: 6px;">📅 ${escapeHtml(exp.year || "")}</div>
-            <div>${escapeHtml(exp.description || "")}</div>
+            <div style="white-space: pre-line; line-height: 1.8">${escapeHtml(exp.description || "")}</div>
           </div>
         </div>`,
     )
     .join("");
   return `
-    <div class="win-window" id="pengalaman">
+    <div class="win-window" id="workexperience">
       <div class="win-titlebar">
-        <div class="win-title"><div class="win-title-icon" style="background: linear-gradient(135deg, #90EE90, #228B22); border-color: #228B22;"></div><span>Pengalaman.exe</span></div>
+        <div class="win-title"><div class="win-title-icon" style="background: linear-gradient(135deg, #90EE90, #228B22); border-color: #228B22;"></div><span>Work.exe</span></div>
         <div class="win-buttons"><div class="win-btn">_</div><div class="win-btn">□</div><div class="win-btn close">×</div></div>
       </div>
       <div class="win-content">
-        <div class="section-title">💼 Pengalaman Kerja</div>
+        <div class="section-title">💼 Work Experience</div>
         <div class="info-grid">${items}</div>
       </div>
     </div>`;
@@ -313,7 +313,7 @@ function renderSkills() {
     )
     .join("");
   return `
-    <div class="win-window" id="keahlian">
+    <div class="win-window" id="skills">
       <div class="win-titlebar">
         <div class="win-title"><div class="win-title-icon" style="background: linear-gradient(135deg, #FFB6C1, #DC143C); border-color: #DC143C;"></div><span>Experience & Skills.exe</span></div>
         <div class="win-buttons"><div class="win-btn">_</div><div class="win-btn">□</div><div class="win-btn close">×</div></div>
@@ -353,20 +353,20 @@ function renderProjects() {
             <div class="project-title">${escapeHtml(proj.title || "")}</div>
             <span class="project-cat">${escapeHtml(proj.category || "")}</span>
             <div class="project-desc">${escapeHtml(proj.description || "")}</div>
-            ${proj.pdf ? '<div style="margin-top:8px;font-size:11px;color:var(--win-blue);"> Klik untuk membuka </div>' : ""}
+            ${proj.pdf ? '<div style="margin-top:8px;font-size:11px;color:var(--win-blue);"> Click to open </div>' : ""}
           </div>
         </div>`,
     )
     .join("");
 
   return `
-    <div class="win-window" id="proyek">
+    <div class="win-window" id="project">
       <div class="win-titlebar">
-        <div class="win-title"><div class="win-title-icon" style="background: linear-gradient(135deg, #FFD700, #FF8C00); border-color: #FF8C00;"></div><span>Proyek.exe</span></div>
+        <div class="win-title"><div class="win-title-icon" style="background: linear-gradient(135deg, #FFD700, #FF8C00); border-color: #FF8C00;"></div><span>Project.exe</span></div>
         <div class="win-buttons"><div class="win-btn">_</div><div class="win-btn">□</div><div class="win-btn close">×</div></div>
       </div>
       <div class="win-content">
-        <div class="section-title">📁 Proyek & Pengalaman</div>
+        <div class="section-title">📁 Project</div>
         <div class="filter-bar">${filterBtns}</div>
         <div class="project-grid">${cards}</div>
       </div>
@@ -403,13 +403,13 @@ function renderCertificates() {
     })
     .join("");
   return `
-    <div class="win-window" id="sertifikat">
+    <div class="win-window" id="achievements">
       <div class="win-titlebar">
-        <div class="win-title"><div class="win-title-icon" style="background: linear-gradient(135deg, #98FB98, #006400); border-color: #006400;"></div><span>Sertifikat.exe</span></div>
+        <div class="win-title"><div class="win-title-icon" style="background: linear-gradient(135deg, #98FB98, #006400); border-color: #006400;"></div><span>Achievements.exe</span></div>
         <div class="win-buttons"><div class="win-btn">_</div><div class="win-btn">□</div><div class="win-btn close">×</div></div>
       </div>
       <div class="win-content">
-        <div class="section-title">🏆 Sertifikat & Pencapaian</div>
+        <div class="section-title">🏆 Certificates & Achievements</div>
         <div class="info-grid">${items}</div>
       </div>
     </div>`;
@@ -418,13 +418,13 @@ function renderCertificates() {
 function renderContact() {
   const c = portfolioData.contact || {};
   return `
-    <div class="win-window" id="kontak">
+    <div class="win-window" id="contact">
       <div class="win-titlebar">
-        <div class="win-title"><div class="win-title-icon" style="background: linear-gradient(135deg, #F0E68C, #B8860B); border-color: #B8860B;"></div><span>Kontak.exe</span></div>
+        <div class="win-title"><div class="win-title-icon" style="background: linear-gradient(135deg, #F0E68C, #B8860B); border-color: #B8860B;"></div><span>Contact.exe</span></div>
         <div class="win-buttons"><div class="win-btn">_</div><div class="win-btn">□</div><div class="win-btn close">×</div></div>
       </div>
       <div class="win-content">
-        <div class="section-title">📧 Hubungi Saya</div>
+        <div class="section-title">📧 Contact Me</div>
         <div class="info-grid">
         
 
@@ -480,11 +480,11 @@ function renderContact() {
 
 function renderSecretMessage() {
   return `
-    <div class="win-window" id="secretMessage">
+    <div class="win-window" id="message">
       <div class="win-titlebar">
         <div class="win-title">
-          <span class="secret-icon">📝</span>
-          <span>Secret Message.exe</span>
+          <span class="secret-icon" style="background:linear-gradient(135deg, #87ceeb, #4682b4);">📝</span>
+          <span>Message.exe</span>
         </div>
         <div class="win-buttons">
           <div class="win-btn">_</div>
@@ -499,19 +499,18 @@ function renderSecretMessage() {
             alt="Warning"
             onerror="this.style.display = 'none'"
           />
-          Kirim pesan rahasia, Pesan akan tersimpan secara
-          anonim.
+        Leave me a message! Please remember to include your email address or social media contact so I can respond to you as soon as possible.
         </p>
 
         <form id="secretForm">
           <div class="secret-form-group">
-            <label for="xpUsername">Username / Inisial:</label>
+            <label for="xpUsername">Name / Username:</label>
             <input
               type="text"
               id="xpUsername"
               required
               maxlength="30"
-              placeholder="Contoh: Gofar"
+              placeholder="Username"
             />
           </div>
 
@@ -522,7 +521,7 @@ function renderSecretMessage() {
               required
               rows="4"
               maxlength="500"
-              placeholder="Tulis pesan di sini..."
+              placeholder="Write A message here"
             ></textarea>
           </div>
 
@@ -530,13 +529,13 @@ function renderSecretMessage() {
             class="secret-divider"
             style="display: flex; gap: 8px; justify-content: flex-end"
           >
-            <button type="submit" class="win-button">Kirim</button>
+            <button type="submit" class="win-button">Send</button>
             <button
               type="button"
               class="win-button"
               id="btnBatal"
             >
-              Batal
+              Cancel
             </button>
           </div>
         </form>
@@ -553,7 +552,7 @@ function renderGaleri() {
       <div class="win-titlebar">
         <div class="title-bar-left">
           <div class="window-icon">📷</div>
-          <span class="window-title">GaleriFoto.exe</span>
+          <span class="window-title">Foto.exe</span>
         </div>
         <div class="window-controls">
        <div class="win-buttons">
@@ -564,7 +563,7 @@ function renderGaleri() {
         </div>
       </div>
 
-      <div class="toolbar">
+      <div class="toolbar" style="display:none;">
         <button class="toolbar-btn" onclick="shufflePhotos()">🔀 Acak</button>
         <div class="toolbar-separator"></div>
         <button class="toolbar-btn" id="btnGrid" onclick="viewMode('grid')">
@@ -579,7 +578,7 @@ function renderGaleri() {
         <span class="address-label">Alamat</span>
         <div class="address-input">
           <span class="icon">📁</span>
-          <span id="addressPath">C:\\Dokumen\\Galeri Foto\\Koleksi</span>
+          <span id="addressPath">C:\\Dokumen\\Koleksi\\3gp</span>
         </div>
       </div>
 
@@ -607,7 +606,7 @@ function renderGaleri() {
         </div>
 
         <!-- Gallery -->
-        <div id="galleryGrid" class="gallery-grid" style="display: none"></div>
+        <div id="galleryGrid" class="gallery-grid" ></div>
       </div>
 
       <!-- Status Bar -->
@@ -719,7 +718,7 @@ async function openPdf(pdfUrl, title) {
   } catch (err) {
     console.error("PDF Error:", err);
     if (viewer) {
-      viewer.innerHTML = `<div class="error-box">❌ Gagal memuat.<br><br>Kemungkinan penyebab:<br>1. File tidak ada di folder <b>uploads/</b><br>2. Buka via server (bukan file://)<br>3. CORS policy browser<br><br><button class="win-button" onclick="closeModal()">Tutup</button></div>`;
+      viewer.innerHTML = `<div class="error-box">❌ Gagal memuat<br><br><button class="win-button" onclick="closeModal()">Tutup</button></div>`;
     }
   }
 }

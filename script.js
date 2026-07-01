@@ -15,6 +15,20 @@ function escapeAttr(text) {
     .replace(/>/g, "&gt;");
 }
 
+function goToHash() {
+  const hash = window.location.hash;
+
+  if (hash) {
+    const element = document.querySelector(hash);
+
+    if (element) {
+      element.scrollIntoView({
+        behavior: "smooth",
+      });
+    }
+  }
+}
+
 function submitSecret(e) {
   e.preventDefault();
 
@@ -190,6 +204,7 @@ function renderAll() {
     attachSecretFormListeners();
 
     initGallery();
+    goToHash();
   } catch (err) {
     console.error("Render error:", err);
     container.innerHTML = `<div class="error-box">❌ Gagal merender data: ${escapeHtml(err.message)}</div>`;

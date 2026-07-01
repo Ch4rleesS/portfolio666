@@ -397,7 +397,7 @@ function renderCertificates() {
             <div class="info-card-body">
               <div style="font-weight: bold; margin-bottom: 4px;">${escapeHtml(cert.issuer || "")}</div>
               <div style="color: var(--win-text-muted); font-size: 11px; margin-bottom: 6px;">📅 ${escapeHtml(cert.year || "")}</div>
-              ${cert.pdf ? '<div style="font-size: 11px; color: var(--win-blue);">Klik untuk membuka</div>' : ""}
+              ${cert.pdf ? '<div style="font-size: 11px; color: var(--win-blue);">Click to open</div>' : ""}
             </div>
           </div>`;
     })
@@ -546,33 +546,43 @@ function renderSecretMessage() {
     `;
 }
 
+function toggleMinimizeGaleri() {
+  const galeri = document.getElementById("galeri");
+  if (galeri) {
+    galeri.classList.toggle("minimized");
+  }
+}
+
+function maximizeGaleri() {
+  const galeri = document.getElementById("galeri");
+  if (galeri) {
+    galeri.classList.remove("minimized");
+    galeri.classList.toggle("maximized"); // atau logika maximize Anda
+  }
+}
+
+function closeGaleri() {
+  const galeri = document.getElementById("galeri");
+  if (galeri) galeri.style.display = "none";
+}
+
 function renderGaleri() {
   return `
-  <div class="win-window" id="galeri">
+  <div class="win-window minimized" id="galeri">
       <div class="win-titlebar">
         <div class="title-bar-left">
           <div class="window-icon">📷</div>
           <span class="window-title">Foto.exe</span>
         </div>
         <div class="window-controls">
-       <div class="win-buttons">
-          <div class="win-btn">_</div>
-          <div class="win-btn">□</div>
-          <div class="win-btn close">×</div>
-        </div>
+          <div class="win-buttons">
+            <div class="win-btn minimize" onclick="toggleMinimizeGaleri()" title="Minimize">_</div>
+            <div class="win-btn maximize" onclick="maximizeGaleri()" title="Maximize">□</div>
+            <div class="win-btn close" onclick="closeGaleri()" title="Tutup">×</div>
+          </div>
         </div>
       </div>
 
-      <div class="toolbar" style="display:none;">
-        <button class="toolbar-btn" onclick="shufflePhotos()">🔀 Acak</button>
-        <div class="toolbar-separator"></div>
-        <button class="toolbar-btn" id="btnGrid" onclick="viewMode('grid')">
-          ⊞ Grid
-        </button>
-        <button class="toolbar-btn" id="btnList" onclick="viewMode('list')">
-          ☰ Daftar
-        </button>
-      </div>
 
       <div class="address-bar">
         <span class="address-label">Alamat</span>
@@ -586,17 +596,15 @@ function renderGaleri() {
         <div class="section-title">
           <span style="font-size: 18px">🖼️</span>
           <h2>Galeri Foto</h2>
+           <button class="btn-open" onclick="toggleMinimizeGaleri()">Open</button>
         </div>
 
         <div class="json-info" style="display: none">
           📄 Membaca dari: <code>galeri.json</code> | 🖼️ Folder:
           <code>./galeri/</code>
-          <span id="galleryJsonStatus" style="float: right; color: #008000"
-            >⏳ Memuat...</span
-          >
+          <span id="galleryJsonStatus" style="float: right; color: #008000">⏳ Memuat...</span>
         </div>
 
-        <!-- Loading State -->
         <div id="galleryLoading" class="loading-container">
           <div class="loading-text">
             <span class="hourglass">⏳</span>
@@ -605,11 +613,9 @@ function renderGaleri() {
           </div>
         </div>
 
-        <!-- Gallery -->
-        <div id="galleryGrid" class="gallery-grid" ></div>
+        <div id="galleryGrid" class="gallery-grid"></div>
       </div>
 
-      <!-- Status Bar -->
       <div class="status-bar">
         <div class="status-bar-left">
           <span id="galleryStatusCount">0 objek</span>
@@ -627,11 +633,7 @@ function renderGaleri() {
       <div class="lightbox-window" onclick="event.stopPropagation()">
         <div class="lightbox-title-bar">
           <span class="lightbox-title" id="lightbox-title">Pratinjau Foto</span>
-          <div
-            class="win-btn close"
-            onclick="closeLightbox()"
-            style="width: 21px; height: 21px"
-          >
+          <div class="win-btn close" onclick="closeLightbox()" style="width: 21px; height: 21px">
             <span>×</span>
           </div>
         </div>

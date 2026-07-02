@@ -237,7 +237,7 @@ function renderHero() {
         <p style="color: var(--win-text-muted); font-size: 14px; margin-bottom: 16px;">${escapeHtml(p.title || "")}</p>
         <p style="font-size: 13px; max-width: 600px; margin: 0 auto;">${escapeHtml(p.bio || "")}</p>
         <div style="margin-top: 24px;">
-          <button class="win-button primary" onclick="document.getElementById('proyek').scrollIntoView({behavior:'smooth'})">📂 View Project</button>
+          <button class="win-button primary" onclick="document.getElementById('project').scrollIntoView({behavior:'smooth'})">📂 View Project</button>
         </div>
       </div>
     </div>`;
@@ -530,7 +530,7 @@ function renderSecretMessage() {
           </div>
 
           <div class="secret-form-group">
-            <label for="xpMessage">Pesan Rahasia:</label>
+            <label for="xpMessage">Message:</label>
             <textarea
               id="xpMessage"
               required

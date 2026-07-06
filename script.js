@@ -615,15 +615,15 @@ function renderGaleri() {
         </div>
 
         <div class="json-info" style="display: none">
-          📄 Membaca dari: <code>galeri.json</code> | 🖼️ Folder:
+          📄 Read From: <code>galeri.json</code> | 🖼️ Folder:
           <code>./galeri/</code>
-          <span id="galleryJsonStatus" style="float: right; color: #008000">⏳ Memuat...</span>
+          <span id="galleryJsonStatus" style="float: right; color: #008000">⏳ Load Data...</span>
         </div>
 
         <div id="galleryLoading" class="loading-container">
           <div class="loading-text">
             <span class="hourglass">⏳</span>
-            <span>Memuat galeri...</span>
+            <span>Load Data...</span>
             <div class="spinner"></div>
           </div>
         </div>
@@ -706,7 +706,7 @@ async function openPdf(pdfUrl, title) {
   if (modalTitle) modalTitle.textContent = title || "PDF Viewer";
   if (viewer) {
     viewer.innerHTML =
-      '<div style="padding:40px;text-align:center;">⏳ Memuat Data....</div>';
+      '<div style="padding:40px;text-align:center;">⏳ Load Data....</div>';
   }
   if (modal) modal.classList.add("active");
 
@@ -735,7 +735,7 @@ async function openPdf(pdfUrl, title) {
   } catch (err) {
     console.error("PDF Error:", err);
     if (viewer) {
-      viewer.innerHTML = `<div class="error-box">❌ Gagal memuat<br><br><button class="win-button" onclick="closeModal()">Tutup</button></div>`;
+      viewer.innerHTML = `<div class="error-box">❌ Load Data Failed<br><br><button class="win-button" onclick="closeModal()">Tutup</button></div>`;
     }
   }
 }
@@ -800,7 +800,7 @@ async function loadGallery() {
   if (loadingEl) loadingEl.style.display = "flex";
   if (galleryEl) galleryEl.style.display = "none";
   if (statusEl) {
-    statusEl.textContent = "⏳ Memuat...";
+    statusEl.textContent = "⏳ Loading...";
     statusEl.style.color = "#008000";
   }
 

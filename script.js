@@ -600,10 +600,10 @@ function renderGaleri() {
 
 
       <div class="address-bar">
-        <span class="address-label">Alamat</span>
+        <span class="address-label">Address</span>
         <div class="address-input">
           <span class="icon">📁</span>
-          <span id="addressPath">C:\\Dokumen\\Koleksi\\3gp</span>
+          <span id="addressPath">C:\\Documents\\Foto\\</span>
         </div>
       </div>
 

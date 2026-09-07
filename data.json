@@ -68,27 +68,11 @@
   "projects": [
     {
       "id": 1,
-      "title": "TEST1",
-      "category": "IOT",
-      "description": "Monitoring tingkat stress",
-      "pdf": "uploads/iot-project.pdf",
-      "thumbnail": "uploads/proj1.jpg"
-    },
-    {
-      "id": 2,
-      "title": "TEST2",
-      "category": "Programming",
-      "description": "gofar",
-      "pdf": "uploads/HG111_New_Homogenizer.pdf",
-      "thumbnail": "uploads/gofar.png"
-    },
-    {
-      "id": 3,
-      "title": "TEST3",
-      "category": "Programming",
-      "description": "gofar",
-      "pdf": "uploads/HG111_New_Homogenizer.pdf",
-      "thumbnail": "uploads/gofar.png"
+      "title": "Fristam Shear Pump Install",
+      "category": "Automation",
+      "description": "Modifikasi program plc untuk Instalasi mesin baru (fristam shear pump)",
+      "pdf": "uploads/fristam_plc_connect.pdf",
+      "thumbnail": "uploads/fristam.png"
     }
   ],
   "certificates": [

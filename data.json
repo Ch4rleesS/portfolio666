@@ -73,6 +73,14 @@
       "description": "Modifikasi program plc untuk Instalasi mesin baru (fristam shear pump)",
       "pdf": "uploads/fristam_plc_connect.pdf",
       "thumbnail": "uploads/fristam.png"
+    },
+    {
+      "id": 2,
+      "title": "Homogenizer Tetrapak Install",
+      "category": "Automation",
+      "description": "Modifikasi program, wiring Plc untuk Instalasi mesin baru (fristam shear pump)",
+      "pdf": "uploads/HG111_CONNECT.pdf",
+      "thumbnail": "uploads/HG111.jpeg"
     }
   ],
   "certificates": [
